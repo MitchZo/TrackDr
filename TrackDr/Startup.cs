@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using TrackDr.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TrackDr.Models;
 
 namespace TrackDr
 {
@@ -37,6 +38,8 @@ namespace TrackDr
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<TrackDrDbContext>(options => options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
