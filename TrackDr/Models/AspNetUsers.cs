@@ -11,7 +11,9 @@ namespace TrackDr.Models
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
+            Location = new HashSet<Location>();
             SavedDoctors = new HashSet<SavedDoctors>();
+            UserChild = new HashSet<UserChild>();
         }
 
         public string Id { get; set; }
@@ -34,6 +36,8 @@ namespace TrackDr.Models
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual ICollection<Location> Location { get; set; }
         public virtual ICollection<SavedDoctors> SavedDoctors { get; set; }
+        public virtual ICollection<UserChild> UserChild { get; set; }
     }
 }
