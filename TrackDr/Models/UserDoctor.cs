@@ -7,7 +7,7 @@ namespace TrackDr.Models
     {
         public UserDoctor()
         {
-            Doctor = new HashSet<Doctor>();
+            DoctorUid = new HashSet<DoctorUid>();
             TrackDrUser = new HashSet<TrackDrUser>();
         }
 
@@ -15,9 +15,9 @@ namespace TrackDr.Models
         public int? UserId { get; set; }
         public string DoctorId { get; set; }
 
-        public virtual Doctor DoctorNavigation { get; set; }
+        public virtual DoctorUid Doctor { get; set; }
         public virtual TrackDrUser User { get; set; }
-        public virtual ICollection<Doctor> Doctor { get; set; }
+        public virtual ICollection<DoctorUid> DoctorUid { get; set; }
         public virtual ICollection<TrackDrUser> TrackDrUser { get; set; }
     }
 }

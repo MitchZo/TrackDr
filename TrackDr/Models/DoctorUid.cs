@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TrackDr.Models
 {
-    public partial class Rootobject
+    public partial class DoctorUid
     {
-        public Rootobject()
+        public DoctorUid()
         {
             UserDoctorNavigation = new HashSet<UserDoctor>();
         }

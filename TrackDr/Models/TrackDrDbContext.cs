@@ -22,7 +22,7 @@ namespace TrackDr.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<Doctor> Doctor { get; set; }
+        public virtual DbSet<DoctorUid> DoctorUid { get; set; }
         public virtual DbSet<TrackDrUser> TrackDrUser { get; set; }
         public virtual DbSet<UserChild> UserChild { get; set; }
         public virtual DbSet<UserDoctor> UserDoctor { get; set; }
@@ -142,14 +142,16 @@ namespace TrackDr.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
-            modelBuilder.Entity<Doctor>(entity =>
+            modelBuilder.Entity<DoctorUid>(entity =>
             {
+                entity.ToTable("DoctorUID");
+
                 entity.Property(e => e.Id)
                     .HasMaxLength(32)
                     .ValueGeneratedNever();
 
                 entity.HasOne(d => d.UserDoctor)
-                    .WithMany(p => p.Doctor)
+                    .WithMany(p => p.DoctorUid)
                     .HasForeignKey(d => d.UserDoctorId)
                     .HasConstraintName("FK__Doctor__UserDoct__02FC7413");
             });
@@ -207,7 +209,7 @@ namespace TrackDr.Models
             {
                 entity.Property(e => e.DoctorId).HasMaxLength(32);
 
-                entity.HasOne(d => d.DoctorNavigation)
+                entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.UserDoctorNavigation)
                     .HasForeignKey(d => d.DoctorId)
                     .HasConstraintName("FK__UserDocto__Docto__160F4887");
