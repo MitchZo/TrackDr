@@ -9,7 +9,7 @@ namespace TrackDr.Models
     public class Rootobject
     {
         public Meta meta { get; set; }
-        public Datum[] data { get; set; }
+        public Doctor[] doctorList { get; set; }
     }
 
     public class Meta
@@ -22,7 +22,7 @@ namespace TrackDr.Models
         public int limit { get; set; }
     }
 
-    public class Datum
+    public class Doctor
     {
         public Practice[] practices { get; set; }
         public Education[] educations { get; set; }
