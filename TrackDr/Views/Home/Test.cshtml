@@ -7,7 +7,7 @@
 
 @model Rootobject
 @*Most properties in arrays, nested foreach loops required for certain displays ( $item.profile.((property to display))*@
-@foreach (var item in Model.data)
+@foreach (var item in Model.doctorList)
 {
     @item.profile.first_name
 }

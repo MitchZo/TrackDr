@@ -9,8 +9,8 @@ namespace TrackDr.Models
         public string FirstName { get; set; }
         public string ConditionList { get; set; }
         public string ChildsDoctor { get; set; }
-        public string UserId { get; set; }
+        public int? ParentId { get; set; }
 
-        public virtual AspNetUsers User { get; set; }
+        public virtual TrackDrUser Parent { get; set; }
     }
 }
