@@ -40,7 +40,7 @@ namespace TrackDr.Controllers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
         }
-        public async Task<string> SelectedDoctorUid()
+        public async Task<IActionResult> SelectedDoctorUid()
         {
             string apiKey = GetAPIKey();
             var client = new HttpClient();
@@ -51,13 +51,18 @@ namespace TrackDr.Controllers
 
             //we are returning the first doctor in the api's UID
             //AddToDb(test.data[0].uid);
-            return test.data[0].uid;
+            string uid = test.data[0].uid;
+            DoctorUid newDoctor = new DoctorUid();
+            newDoctor.Id = uid;
+            _context.DoctorUid.Add(newDoctor);
+            _context.SaveChanges();
+            return RedirectToAction("AddToDb");
             
         }
 
         // next we want to add this UID to the DoctorUid Database
         // we won't be returning anything from this method
-        public void AddToDb()
+        public IActionResult AddToDb()
         {
             // this sets doctorUid to the UID we got from the API in SelectedDoctorUid()
             string doctorUid = SelectedDoctorUid().ToString();
@@ -68,8 +73,10 @@ namespace TrackDr.Controllers
             _context.SaveChanges();
             // in theory, this will store our Doctor UID in DoctorUid MODEL that we got from our API
             // which is stored in a new doctor object in the datatabase 
+            return RedirectToAction("Test");
 
         }
+
 
         // next, we need to make a method that will pull that stored UID from the Db and 
         // access it somewhere else
@@ -78,7 +85,7 @@ namespace TrackDr.Controllers
 
 
 
-        
+
         //public IActionResult AddFavorite(Doctor doctor)
         //{
         //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
