@@ -53,9 +53,9 @@ namespace TrackDr.Controllers
             //we are returning the first doctor in the api's UID
             //AddToDb(test.data[0].uid);
             string uid = test.data[6].uid;
-            DoctorUid newDoctor = new DoctorUid();
+            Doctor newDoctor = new Doctor();
             newDoctor.Id = uid;
-            _context.DoctorUid.Add(newDoctor);
+            _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
             return View("ListDoctor", newDoctor);
             
@@ -107,7 +107,27 @@ namespace TrackDr.Controllers
             // now we have a list of UID that correspond to doctors with that specialty
             return View("ListDoctors", result);
         }
+        public IActionResult AddDoctor(Datum doctor)
+        {
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            UserDoctor savedDoctors = new UserDoctor();
+            if (ModelState.IsValid)
+            {
+                Doctor newDoctor = new Doctor();
+                newDoctor.Id = doctor.uid;
+                _context.Doctor.Add(newDoctor);
+                _context.SaveChanges();
 
+                //                savedDoctors.Id = 0;
+                savedDoctors.UserId = thisUser.Id;
+                savedDoctors.DoctorId = doctor.uid;
+
+                _context.UserDoctor.Add(savedDoctors);
+                _context.SaveChanges();
+                return View("ListDoctors");
+            }
+            return View("ListDoctors");
+        }
         public IActionResult Add()
         {
             // add the UId from the chosen doctor as well as the user's id to the UserDoctor table
@@ -118,7 +138,30 @@ namespace TrackDr.Controllers
         // next, we need to make a method that will pull that stored UID from the Db and 
         // access it somewhere else
 
+        [HttpPost]
+        public IActionResult RegisterUser(User newUserInfo)
+        {
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            User newUser = new User();
+            newUser.HouseNumber = newUserInfo.HouseNumber;
+            newUser.Street = newUserInfo.Street;
+            newUser.Street2 = newUserInfo.Street2;
+            newUser.City = newUserInfo.City;
+            newUser.State = newUserInfo.State;
+            newUser.ZipCode = newUserInfo.ZipCode;
+            newUser.UserId = thisUser.Id;
+            newUser.Id = newUserInfo.Id;
 
+            _context.User.Add(newUser);
+            _context.SaveChanges();
+
+            return View("Search");
+        }
+
+        public IActionResult RegisterUser()
+        {
+            return View();
+        }
 
 
 

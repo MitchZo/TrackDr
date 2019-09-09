@@ -11,7 +11,7 @@ namespace TrackDr.Models
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
-            TrackDrUser = new HashSet<TrackDrUser>();
+            User = new HashSet<User>();
         }
 
         public string Id { get; set; }
@@ -34,6 +34,6 @@ namespace TrackDr.Models
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual ICollection<TrackDrUser> TrackDrUser { get; set; }
+        public virtual ICollection<User> User { get; set; }
     }
 }

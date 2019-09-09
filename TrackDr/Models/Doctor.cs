@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TrackDr.Models
 {
+    public partial class Doctor
+    {
+        public Doctor()
+        {
+            UserDoctor = new HashSet<UserDoctor>();
+        }
+
+        public string Id { get; set; }
+
+        public virtual ICollection<UserDoctor> UserDoctor { get; set; }
+    }
 
     public class Rootobject
     {
-        public Meta meta { get; set; }  
+        public Meta meta { get; set; }
         public Datum[] data { get; set; }
     }
 
@@ -38,7 +47,7 @@ namespace TrackDr.Models
 
     public class Profile
     {
-        
+
         public string first_name { get; set; }
         public string last_name { get; set; }
         public string slug { get; set; }
