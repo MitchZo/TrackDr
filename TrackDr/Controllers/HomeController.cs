@@ -38,9 +38,9 @@ namespace TrackDr.Controllers
         public string GetAPIKey()
         {
             //Use this method to get the APIKey
-            return _configuration.GetSection("AppConfiguration")["APIKeyValue"];
+            return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
         }
-        public async Task<string> Test()
+        public async Task<string> SelectedDoctorUid()
         {
             string apiKey = GetAPIKey();
             var client = new HttpClient();
@@ -48,33 +48,52 @@ namespace TrackDr.Controllers
             var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
             var test = await response.Content.ReadAsAsync<Rootobject>();
             //var test1 = await response.Content.ReadAsStringAsync(); <------Test condition
-            
-            return test.doctorList[0].uid;
+
+            //we are returning the first doctor in the api's UID
+            //AddToDb(test.data[0].uid);
+            return test.data[0].uid;
             
         }
+
+        // next we want to add this UID to the DoctorUid Database
+        // we won't be returning anything from this method
+        public void AddToDb()
+        {
+            // this sets doctorUid to the UID we got from the API in SelectedDoctorUid()
+            string doctorUid = SelectedDoctorUid().ToString();
+            // save UId to DoctorUid.Id
+            DoctorUid newDoctor = new DoctorUid();
+            newDoctor.Id = doctorUid;
+            _context.DoctorUid.Add(newDoctor);
+            _context.SaveChanges();
+            // in theory, this will store our Doctor UID in DoctorUid MODEL that we got from our API
+            // which is stored in a new doctor object in the datatabase 
+
+        }
+
+        // next, we need to make a method that will pull that stored UID from the Db and 
+        // access it somewhere else
+
+
+
+
 
         
-        public IActionResult AddFavorite(Doctor doctor)
-        {
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            SavedDoctors favoriteDr = new SavedDoctors();
+        //public IActionResult AddFavorite(Doctor doctor)
+        //{
+        //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+        //    DoctorUid favoriteDr = new DoctorUid();
 
-            string newDoctor = Test().ToString();
-            //if (ModelState.IsValid)
-            //{
-                favoriteDr.DrList += Test().ToString();
+        //    string newDoctor = SelectedDoctorUid().ToString();
+        //    //if (ModelState.IsValid)
+        //    //{
+        //        favoriteDr.Id += SelectedDoctorUid().ToString();
 
-                _context.SavedDoctors.Add(favoriteDr);
-                _context.SaveChanges();
-                return RedirectToAction("FavoriteMovies");
-            //}
-            //return RedirectToAction("Index");
-        }
-        public IActionResult FavoriteDr()
-        {
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            List<SavedDoctors> favoriteList = _context.SavedDoctors.Where(u => u.UserId == thisUser.Id).ToList();
-            return View(favoriteList);
-        }
+        //        _context.DoctorUid.Add(favoriteDr);
+        //        _context.SaveChanges();
+        //        return RedirectToAction("FavoriteMovies");
+        //    //}
+        //    //return RedirectToAction("Index");
+        //}
     }
 }
