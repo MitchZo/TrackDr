@@ -53,12 +53,34 @@ namespace TrackDr.Controllers
             //we are returning the first doctor in the api's UID
             //AddToDb(test.data[0].uid);
             string uid = test.data[6].uid;
-            DoctorUid newDoctor = new DoctorUid();
+            Doctor newDoctor = new Doctor();
             newDoctor.Id = uid;
-            _context.DoctorUid.Add(newDoctor);
+            _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
             return View("ListDoctor", newDoctor);
             
+        }
+        
+        public IActionResult AddDoctor(Datum doctor)
+        {
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            UserDoctor savedDoctors = new UserDoctor();
+            if (ModelState.IsValid)
+            {
+                Doctor newDoctor = new Doctor();
+                newDoctor.Id = doctor.uid;
+                _context.Doctor.Add(newDoctor);
+                _context.SaveChanges();
+
+//                savedDoctors.Id = 0;
+                savedDoctors.UserId = thisUser.Id;
+                savedDoctors.DoctorId = doctor.uid;
+
+                _context.UserDoctor.Add(savedDoctors);
+                _context.SaveChanges();
+                return RedirectToAction("ListDoctors");
+            }
+            return RedirectToAction("ListDoctors");
         }
 
         // next we want to add this UID to the DoctorUid Database

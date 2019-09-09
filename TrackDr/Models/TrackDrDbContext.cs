@@ -22,9 +22,8 @@ namespace TrackDr.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<DoctorUid> DoctorUid { get; set; }
-        public virtual DbSet<TrackDrUser> TrackDrUser { get; set; }
-        public virtual DbSet<UserChild> UserChild { get; set; }
+        public virtual DbSet<Doctor> Doctor { get; set; }
+        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserDoctor> UserDoctor { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,7 +31,7 @@ namespace TrackDr.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=TrackDrDb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=TrackDrDb;Trusted_Connection=true");
             }
         }
 
@@ -142,22 +141,15 @@ namespace TrackDr.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
-            modelBuilder.Entity<DoctorUid>(entity =>
+            modelBuilder.Entity<Doctor>(entity =>
             {
-                entity.ToTable("DoctorUID");
-
-                entity.Property(e => e.Id)
-                    .HasMaxLength(32)
-                    .ValueGeneratedNever();
-
-                entity.HasOne(d => d.UserDoctor)
-                    .WithMany(p => p.DoctorUid)
-                    .HasForeignKey(d => d.UserDoctorId)
-                    .HasConstraintName("FK__Doctor__UserDoct__02FC7413");
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<TrackDrUser>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasMaxLength(32);
@@ -182,42 +174,27 @@ namespace TrackDr.Models
                     .IsRequired()
                     .HasMaxLength(5);
 
-                entity.HasOne(d => d.UserDoctor)
-                    .WithMany(p => p.TrackDrUser)
-                    .HasForeignKey(d => d.UserDoctorId)
-                    .HasConstraintName("FK__TrackDrUs__UserD__05D8E0BE");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.TrackDrUser)
+                entity.HasOne(d => d.UserNavigation)
+                    .WithMany(p => p.User)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__TrackDrUs__UserI__06CD04F7");
-            });
-
-            modelBuilder.Entity<UserChild>(entity =>
-            {
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.HasOne(d => d.Parent)
-                    .WithMany(p => p.UserChild)
-                    .HasForeignKey(d => d.ParentId)
-                    .HasConstraintName("FK__UserChild__Paren__09A971A2");
+                    .HasConstraintName("FK__User__UserId__619B8048");
             });
 
             modelBuilder.Entity<UserDoctor>(entity =>
             {
-                entity.Property(e => e.DoctorId).HasMaxLength(32);
+                entity.Property(e => e.DoctorId).HasMaxLength(450);
+
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Doctor)
-                    .WithMany(p => p.UserDoctorNavigation)
+                    .WithMany(p => p.UserDoctor)
                     .HasForeignKey(d => d.DoctorId)
-                    .HasConstraintName("FK__UserDocto__Docto__160F4887");
+                    .HasConstraintName("FK__UserDocto__Docto__66603565");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserDoctorNavigation)
+                    .WithMany(p => p.UserDoctor)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__UserDocto__UserI__151B244E");
+                    .HasConstraintName("FK__UserDocto__UserI__6754599E");
             });
         }
     }
