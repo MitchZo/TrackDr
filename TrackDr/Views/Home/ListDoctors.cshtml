@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "ListDoctor";
+}
+
+<h1>List Doctor</h1>
+
+@model IEnumerable<TrackDr.Models.Rootobject>
+
+<table class="table">
+    <tr>
+        <th>Name:</th>
+    </tr>
+
+    @foreach (var doctor in Model)
+    {
+        @foreach (Datum d in doctor.data)
+        {
+        <tr>
+            <td>@d.profile.title</td>
+            <td>@d.profile.first_name</td>
+            <td>@d.profile.last_name</td>
+            <td>@d.profile.gender</td>
+            <td>@d.profile.bio</td>
+            <td>@Html.ActionLink("Add", "AddToUserDoctorList")</td>
+        </tr>
+        }
+    }
+</table>
+
