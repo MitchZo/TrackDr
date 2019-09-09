@@ -5,26 +5,35 @@
 
 <h1>List Doctor</h1>
 
-@model IEnumerable<TrackDr.Models.Rootobject>
+@model TrackDr.Models.Rootobject
 
 <table class="table">
     <tr>
+        <th>Title:</th>
         <th>Name:</th>
+        <th></th>
+        <th>Gender:</th>
+        <th>State:</th>
+        <th>Specialty:</th>
+
     </tr>
 
-    @foreach (var doctor in Model)
+    @foreach (var doctor in Model.data)
     {
-        @foreach (Datum d in doctor.data)
-        {
         <tr>
-            <td>@d.profile.title</td>
-            <td>@d.profile.first_name</td>
-            <td>@d.profile.last_name</td>
-            <td>@d.profile.gender</td>
-            <td>@d.profile.bio</td>
+            <td>@doctor.profile.title</td>
+            <td>@doctor.profile.first_name @doctor.profile.last_name</td>
+            <td>@doctor.profile.gender</td>
+            @foreach (var location in doctor.practices)
+            {
+                <td>@location.visit_address.state</td>
+            }
+            @foreach (var specialty in doctor.specialties)
+            {
+                <td>@specialty.name</td>
+            }
             <td>@Html.ActionLink("Add", "AddToUserDoctorList")</td>
         </tr>
-        }
     }
 </table>
 

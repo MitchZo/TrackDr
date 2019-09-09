@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using TrackDr.Models;
 
 namespace TrackDr.Controllers
@@ -88,19 +89,29 @@ namespace TrackDr.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string userSpecialty)
+        public async Task<IActionResult> Search(string userInput)
         {
             string apiKey = GetAPIKey();
             var client = new HttpClient();
             client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query={userSpecialty}&specialty_uid=pediatrician&user_key={apiKey}");
-            var result = await response.Content.ReadAsAsync<List<Rootobject>>();
+            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&user_key={apiKey}");
+            var result = await response.Content.ReadAsAsync<Rootobject>();
+            //List<Rootobject> doctorList = new List<Rootobject>();
+            //foreach (var v in result)
+            //{
+            //    var deserializedResult = JsonConvert.DeserializeObject<Rootobject>(v.ToString());
+            //    doctorList.Add(deserializedResult);
+            //}
+            //var deserializedResult = JsonConvert.DeserializeObject<List<Rootobject>>(result.ToString());
+            //var deserializedResult = JsonConvert.DeserializeObject<List<Rootobject>>(response.ToString());
             // now we have a list of UID that correspond to doctors with that specialty
             return View("ListDoctors", result);
         }
 
         public IActionResult Add()
         {
+            // add the UId from the chosen doctor as well as the user's id to the UserDoctor table
+            
             return View();
         }
 
