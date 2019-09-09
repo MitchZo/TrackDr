@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "ListDoctor";
+}
+
+<h1>List Doctor</h1>
+
+@model TrackDr.Models.Rootobject
+
+<table class="table">
+    <tr>
+        <th>Title:</th>
+        <th>Name:</th>
+        <th></th>
+        <th>Gender:</th>
+        <th>State:</th>
+        <th>Specialty:</th>
+
+    </tr>
+
+    @foreach (var doctor in Model.data)
+    {
+        <tr>
+            <td>@doctor.profile.title</td>
+            <td>@doctor.profile.first_name @doctor.profile.last_name</td>
+            <td>@doctor.profile.gender</td>
+            @foreach (var location in doctor.practices)
+            {
+                <td>@location.visit_address.state</td>
+            }
+            @foreach (var specialty in doctor.specialties)
+            {
+                <td>@specialty.name</td>
+            }
+            <td>@Html.ActionLink("Add", "AddToUserDoctorList")</td>
+        </tr>
+    }
+</table>
+
