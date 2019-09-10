@@ -41,7 +41,27 @@ namespace TrackDr.Controllers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
         }
-        public async Task<IActionResult> SelectedDoctorUid()
+        //public async Task<IActionResult> SelectedDoctorUid()
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
+        //    var test = await response.Content.ReadAsAsync<Rootobject>();
+        //    //var test1 = await response.Content.ReadAsStringAsync(); <------Test condition
+        //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+        //    //we are returning the first doctor in the api's UID
+        //    //AddToDb(test.data[0].uid);
+        //    string uid = test.data[6].uid;
+        //    Doctor newDoctor = new Doctor();
+        //    newDoctor.Id = uid;
+        //    _context.Doctor.Add(newDoctor);
+        //    _context.SaveChanges();
+        //    return View("ListDoctor", newDoctor);
+            
+        //}
+        
+        public IActionResult AddDoctor(Datum doctor)
         {
             string apiKey = GetAPIKey();
             var client = new HttpClient();
@@ -55,7 +75,6 @@ namespace TrackDr.Controllers
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
             return View("ListDoctor", newDoctor);
-            
         }
 
         public IActionResult ListDoctor()
@@ -104,7 +123,6 @@ namespace TrackDr.Controllers
         {
             return View();
         }
-
 
         // saves the user's address to the UserDb as well as the user's Id number and their ASP Id
         [HttpPost]

@@ -32,6 +32,7 @@ namespace TrackDr.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
+
             }
         }
 
@@ -178,6 +179,7 @@ namespace TrackDr.Models
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__User__UserId__5070F446");
+
             });
 
             modelBuilder.Entity<UserDoctor>(entity =>
@@ -191,10 +193,12 @@ namespace TrackDr.Models
                     .HasForeignKey(d => d.DoctorId)
                     .HasConstraintName("FK__UserDocto__Docto__5165187F");
 
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserDoctor)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__UserDocto__UserI__52593CB8");
+
             });
         }
     }
