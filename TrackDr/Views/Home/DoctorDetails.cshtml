@@ -1,19 +1,18 @@
 ﻿
 @{
-    ViewData["Title"] = "ListDoctor";
+    ViewData["Title"] = "DoctorDetails";
 }
 
-<h1>List Doctor</h1>
-
-@model TrackDr.Models.Rootobject
+<h1>Doctor Details</h1>
 
 <table class="table">
     <tr>
         <th>Title:</th>
         <th>Name:</th>
+        <th></th>
+        <th>Gender:</th>
         <th>State:</th>
-        <th></th>
-        <th></th>
+        <th>Specialty:</th>
 
     </tr>
 
@@ -22,12 +21,16 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
+            <td>@doctor.profile.gender</td>
             @foreach (var location in doctor.practices)
             {
                 <td>@location.visit_address.state</td>
             }
-            <td>@Html.ActionLink("Add", "AddDoctor", "Home", doctor)</td>
+            @foreach (var specialty in doctor.specialties)
+            {
+                <td>@specialty.name</td>
+            }
+            <td>@doctor.profile.bio</td>
         </tr>
     }
 </table>
-

@@ -7,23 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
+    <Content Remove="bin\**" />
     <Content Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
     <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\netcoreapp2.2\TrackDr.deps.json" />
-    <Content Include="bin\Debug\netcoreapp2.2\TrackDr.runtimeconfig.dev.json" />
-    <Content Include="bin\Debug\netcoreapp2.2\TrackDr.runtimeconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\Debug\netcoreapp2.2\TrackDr.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\TrackDr.pdb" />
-    <None Include="bin\Debug\netcoreapp2.2\TrackDr.Views.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\TrackDr.Views.pdb" />
     <None Include="Views\Home\Index.cshtml" />
     <None Include="Views\Home\ListDoctors.cshtml" />
     <None Include="Views\Home\Privacy.cshtml" />

@@ -41,25 +41,25 @@ namespace TrackDr.Controllers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
         }
-        public async Task<IActionResult> SelectedDoctorUid()
-        {
-            string apiKey = GetAPIKey();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
-            var test = await response.Content.ReadAsAsync<Rootobject>();
-            //var test1 = await response.Content.ReadAsStringAsync(); <------Test condition
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            //we are returning the first doctor in the api's UID
-            //AddToDb(test.data[0].uid);
-            string uid = test.data[6].uid;
-            Doctor newDoctor = new Doctor();
-            newDoctor.Id = uid;
-            _context.Doctor.Add(newDoctor);
-            _context.SaveChanges();
-            return View("ListDoctor", newDoctor);
+        //public async Task<IActionResult> SelectedDoctorUid()
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
+        //    var test = await response.Content.ReadAsAsync<Rootobject>();
+        //    //var test1 = await response.Content.ReadAsStringAsync(); <------Test condition
+        //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+        //    //we are returning the first doctor in the api's UID
+        //    //AddToDb(test.data[0].uid);
+        //    string uid = test.data[6].uid;
+        //    Doctor newDoctor = new Doctor();
+        //    newDoctor.Id = uid;
+        //    _context.Doctor.Add(newDoctor);
+        //    _context.SaveChanges();
+        //    return View("ListDoctor", newDoctor);
             
-        }
+        //}
         
         public IActionResult AddDoctor(Datum doctor)
         {
@@ -140,7 +140,18 @@ namespace TrackDr.Controllers
         // next, we need to make a method that will pull that stored UID from the Db and 
         // access it somewhere else
 
+        public IActionResult SavedDoctors()
+        {
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            List<UserDoctor> savedDoctors = _context.UserDoctor.Where(u => u.UserId == thisUser.Id).ToList();
+            return View(savedDoctors);
+        }
 
+        public IActionResult DoctorDetails()
+        {
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            return View();
+        }
 
 
 
