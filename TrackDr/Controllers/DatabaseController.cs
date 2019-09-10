@@ -21,5 +21,17 @@ namespace TrackDr.Controllers
         {
             return View();
         }
+        public bool CanAddDoctor(Doctor doctor)
+        {
+            Doctor foundDoctor = _context.Doctor.Find(doctor.Id);
+            if (foundDoctor.Id == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
