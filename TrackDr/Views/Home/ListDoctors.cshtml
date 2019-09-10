@@ -26,6 +26,11 @@
             {
                 <td>@location.visit_address.state</td>
             }
+            @foreach (var specialty in doctor.specialties)
+            {
+                <td>@specialty.name</td>
+            }
+
             <td>@Html.ActionLink("Add", "AddDoctor", "Home", doctor)</td>
         </tr>
     }

@@ -31,7 +31,8 @@ namespace TrackDr.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=TrackDrDb;Trusted_Connection=true");
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
+
             }
         }
 
@@ -177,7 +178,8 @@ namespace TrackDr.Models
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__User__UserId__619B8048");
+                    .HasConstraintName("FK__User__UserId__5070F446");
+
             });
 
             modelBuilder.Entity<UserDoctor>(entity =>
@@ -189,12 +191,14 @@ namespace TrackDr.Models
                 entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.UserDoctor)
                     .HasForeignKey(d => d.DoctorId)
-                    .HasConstraintName("FK__UserDocto__Docto__66603565");
+                    .HasConstraintName("FK__UserDocto__Docto__5165187F");
+
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserDoctor)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__UserDocto__UserI__6754599E");
+                    .HasConstraintName("FK__UserDocto__UserI__52593CB8");
+
             });
         }
     }
