@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-
     <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
     <Content Remove="bin\**" />

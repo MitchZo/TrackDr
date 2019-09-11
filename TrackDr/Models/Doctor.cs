@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace TrackDr.Models
@@ -15,11 +16,19 @@ namespace TrackDr.Models
 
         public virtual ICollection<ChildDoctor> ChildDoctor { get; set; }
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
+
     }
     public class Rootobject
     {
         public Meta meta { get; set; }
         public Datum[] data { get; set; }
+
+    }
+
+    public class SingleDoctor
+    {
+        public Meta meta { get; set; }
+        public Datum data { get; set; }
     }
 
     public class Meta
@@ -181,3 +190,4 @@ namespace TrackDr.Models
         public string end_date { get; set; }
     }
 }
+

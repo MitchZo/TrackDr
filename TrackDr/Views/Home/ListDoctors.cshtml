@@ -30,8 +30,17 @@
             {
                 <td>@specialty.name</td>
             }
+            <form action="/Home/AddDoctor" method="post">
+                @{string doctorId = doctor.uid;}
+                <td> <input type="submit" name="" value="Add" /> </td>
+            </form>
+            @{string doctorUid = doctor.uid;}
+
+
+            @*<td>@Html.ActionLink("Add", "AddDoctor",  new { doctorUid });</td>*@
 
             <td>@Html.ActionLink("Add", "AddDoctor", "Home", doctor.uid)</td>
+
         </tr>
     }
 </table>
