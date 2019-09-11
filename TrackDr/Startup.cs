@@ -14,6 +14,7 @@ using TrackDr.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TrackDr.Models;
+using TrackDr.Helpers;
 
 namespace TrackDr
 {
@@ -46,6 +47,9 @@ namespace TrackDr
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IDatabaseHelper, DatabaseHelper>();
+            services.AddScoped<IBDAPIHelper, BDAPIHelper>();
+            services.AddScoped<IGAPIHelper, GAPIHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
