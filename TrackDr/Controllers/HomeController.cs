@@ -27,7 +27,16 @@ namespace TrackDr.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+           // AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            if (User.Identity.IsAuthenticated)
+            {
+                AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+                if (_dbHelper.FindParentById(currentUser.Id) == null)
+                {
+                    return View("RegisterUser");
+                }
+            }
+            return View("Search");
         }
 
         public IActionResult Privacy()
