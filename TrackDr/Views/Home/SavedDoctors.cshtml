@@ -3,25 +3,28 @@
     ViewData["Title"] = "SavedDoctors";
 }
 
-<h1>SavedDoctors</h1>
+@model IEnumerable<TrackDr.Models.SingleDoctor>
 
+<h1>Saved Doctors</h1>
+@{Console.WriteLine("stop point"); }
 <table class="table">
     <tr>
         <th>Title:</th>
         <th>Name:</th>
-        <th>Specialty:</th>
+        @*<th>Specialty:</th>*@
     </tr>
 
-    @foreach (var doctor in Model.data)
-    {
+    
+        @foreach(var doctor in Model)
+        {
+
         <tr>
-            <td>@doctor.profile.title</td>
-            <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-            @foreach (var specialty in doctor.specialties)
-    {
-                <td>@specialty.name</td>
-    }
+            <td>@doctor.data.profile.first_name</td>
+
+
             <td>@Html.ActionLink("More Details", "DoctorDetails", "Home")</td>
         </tr>
+            
+        }
     }
 </table>

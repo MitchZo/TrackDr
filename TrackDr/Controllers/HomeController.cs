@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TrackDr.Models;
@@ -58,24 +60,24 @@ namespace TrackDr.Controllers
         //    _context.Doctor.Add(newDoctor);
         //    _context.SaveChanges();
         //    return View("ListDoctor", newDoctor);
-            
+
         //}
-        
-        public IActionResult AddDoctor(Datum doctor)
-        {
-            string apiKey = GetAPIKey();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
-            var test = await response.Content.ReadAsAsync<Rootobject>();
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            string uid = test.data[6].uid;
-            Doctor newDoctor = new Doctor();
-            newDoctor.Id = uid;
-            _context.Doctor.Add(newDoctor);
-            _context.SaveChanges();
-            return View("ListDoctor", newDoctor);
-        }
+
+        //public IActionResult AddDoctor(Datum doctor)
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
+        //    var test = await response.Content.ReadAsAsync<Rootobject>();
+        //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+        //    string uid = test.data[6].uid;
+        //    Doctor newDoctor = new Doctor();
+        //    newDoctor.Id = uid;
+        //    _context.Doctor.Add(newDoctor);
+        //    _context.SaveChanges();
+        //    return View("ListDoctor", newDoctor);
+        //}
 
         public IActionResult ListDoctor()
         {
@@ -95,51 +97,90 @@ namespace TrackDr.Controllers
             client.BaseAddress = new Uri("https://api.betterdoctor.com");
             var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&user_key={apiKey}");
             var result = await response.Content.ReadAsAsync<Rootobject>();
-           
+
             return View("ListDoctors", result);
         }
-        public IActionResult AddDoctor(Datum doctor)
+
+        //[HttpPost]
+        public IActionResult AddDoctor(string doctorUid)
         {
             AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            UserDoctor savedDoctors = new UserDoctor();
+            ParentDoctor savedDoctors = new ParentDoctor();
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
-                newDoctor.Id = doctor.uid;
+                newDoctor.DoctorId = doctorUid;
                 _context.Doctor.Add(newDoctor);
                 _context.SaveChanges();
 
-             
-                savedDoctors.UserId = thisUser.Id;
-                savedDoctors.DoctorId = doctor.uid;
 
-                _context.UserDoctor.Add(savedDoctors);
+                savedDoctors.ParentId = thisUser.Id;
+                savedDoctors.DoctorId = doctorUid;
+
+                _context.ParentDoctor.Add(savedDoctors);
                 _context.SaveChanges();
-                return View("ListDoctors");
+                return View("Search");
             }
-            return View("ListDoctors");
+            return View("Search");
+        }
+
+        public async Task<IActionResult> SavedDoctors()
+        {
+
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            //Goes to Db, pull list of doctors associated with current user
+            List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
+            //Establishes new list to store doctor UID's
+            List<string> doctorIdList = new List<string>();
+            //List of list of "Doctors", Rootobject >>> Datum[]
+            List<SingleDoctor> doctorList = new List<SingleDoctor>();
+           
+            //Taking all doctorIDs from parentdoctor relationship, adding them to DoctorId list
+            foreach (ParentDoctor relationship in savedList)
+            {
+                doctorIdList.Add(relationship.DoctorId);
+            }
+            
+            //Taking every doctorid, going to api, bringing back that specific doctor and placing it in list
+            foreach (string doctor in doctorIdList)
+            {
+                doctorList.Add(await GetDoctor(doctor));
+            }
+            
+
+            //List<Doctor> thisUsersDoctors = _context.Doctor.Where(doctor => doctor.ParentDoctor.All( => thisUser.Id.Contains(id)));
+            return View(doctorList);
         }
         public IActionResult Add()
         {
             return View();
         }
+        public async Task<SingleDoctor> GetDoctor(string doctorId)
+        {
+            string apiKey = GetAPIKey();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.betterdoctor.com");
+            var response = await client.GetAsync($"/2016-03-01/doctors/{doctorId}?user_key={apiKey}");
+            var result = await response.Content.ReadAsAsync<SingleDoctor>();     
+
+            return result;
+        }
 
         // saves the user's address to the UserDb as well as the user's Id number and their ASP Id
         [HttpPost]
-        public IActionResult RegisterUser(User newUserInfo)
+        public IActionResult RegisterUser(Parent newUserInfo)
         {
             AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            User newUser = new User();
+            Parent newUser = new Parent();
             newUser.HouseNumber = newUserInfo.HouseNumber;
             newUser.Street = newUserInfo.Street;
             newUser.Street2 = newUserInfo.Street2;
             newUser.City = newUserInfo.City;
             newUser.State = newUserInfo.State;
             newUser.ZipCode = newUserInfo.ZipCode;
-            newUser.UserId = thisUser.Id;
-            newUser.Id = newUserInfo.Id;
+            newUser.ParentId = thisUser.Id;
 
-            _context.User.Add(newUser);
+            _context.Parent.Add(newUser);
             _context.SaveChanges();
 
             return View("Search");
