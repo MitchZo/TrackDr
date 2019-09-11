@@ -10,21 +10,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TrackDr.Models;
+using TrackDr.Helpers;
 
 namespace TrackDr.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TrackDrDbContext _context;
-        private readonly IConfiguration _configuration;
-        public HomeController(TrackDrDbContext context, IConfiguration configuration)
+        private readonly IDatabaseHelper _dbHelper;
+        private readonly IGAPIHelper _gAPIHelper;
+        private readonly IBDAPIHelper _bDAPIHelper;
+        public HomeController(IDatabaseHelper dbHelper, IGAPIHelper gAPIHelper, IBDAPIHelper bDAPIHelper)
         {
-            _context = context;
-            _configuration = configuration;
+            _dbHelper = dbHelper;
+            _gAPIHelper = gAPIHelper;
+            _bDAPIHelper = bDAPIHelper;
         }
         public IActionResult Index()
         {
-            string ApiKey = GetAPIKey();
             return View();
         }
 
@@ -38,11 +40,7 @@ namespace TrackDr.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public string GetAPIKey()
-        {
-            //Use this method to get the APIKey
-            return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
-        }
+        
         //public async Task<IActionResult> SelectedDoctorUid()
         //{
         //    string apiKey = GetAPIKey();
@@ -78,78 +76,70 @@ namespace TrackDr.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string userInput)
         {
-            string apiKey = GetAPIKey();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&user_key={apiKey}");
-            var result = await response.Content.ReadAsAsync<Rootobject>();
+            var result = await _bDAPIHelper.GetDoctorList(userInput);
 
             return View("ListDoctors", result);
         }
 
         public IActionResult AddDoctor(string doctorUid)
         {
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            ParentDoctor savedDoctors = new ParentDoctor();
+            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            ParentDoctor newParentDoctor = new ParentDoctor();
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
                 newDoctor.DoctorId = doctorUid;
-                _context.Doctor.Add(newDoctor);
-                _context.SaveChanges();
+                if (_dbHelper.CanAddDoctor(newDoctor))
+                {
+                    _dbHelper.AddNewDoctor(newDoctor);
+                }
 
+                newParentDoctor.ParentId = thisUser.Id;
+                newParentDoctor.DoctorId = doctorUid;
 
-                savedDoctors.ParentId = thisUser.Id;
-                savedDoctors.DoctorId = doctorUid;
-
-                _context.ParentDoctor.Add(savedDoctors);
-                _context.SaveChanges();
+                if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, newDoctor.DoctorId))
+                {
+                    _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+                }
                 return View("Search");
             }
             return View("Search");
         }
 
-        public async Task<IActionResult> SavedDoctors()
+        public IActionResult SavedDoctors()
         {
 
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            //Goes to Db, pull list of doctors associated with current user
-            List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
-            //Establishes new list to store doctor UID's
-            List<string> doctorIdList = new List<string>();
-            //List of list of "Doctors", Rootobject >>> Datum[]
-            List<SingleDoctor> doctorList = new List<SingleDoctor>();
-           
-            //Taking all doctorIDs from parentdoctor relationship, adding them to DoctorId list
-            foreach (ParentDoctor relationship in savedList)
-            {
-                doctorIdList.Add(relationship.DoctorId);
-            }
-            
-            //Taking every doctorid, going to api, bringing back that specific doctor and placing it in list
-            foreach (string doctor in doctorIdList)
-            {
-                doctorList.Add(await GetDoctor(doctor));
-            }
-            
+            //AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            ////Goes to Db, pull list of doctors associated with current user
+            //List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
+            ////Establishes new list to store doctor UID's
+            //List<string> doctorIdList = new List<string>();
+            ////List of list of "Doctors", Rootobject >>> Datum[]
+            //List<SingleDoctor> doctorList = new List<SingleDoctor>();
+
+            ////Taking all doctorIDs from parentdoctor relationship, adding them to DoctorId list
+            //foreach (ParentDoctor relationship in savedList)
+            //{
+            //    doctorIdList.Add(relationship.DoctorId);
+            //}
+
+            ////Taking every doctorid, going to api, bringing back that specific doctor and placing it in list
+            //foreach (string doctor in doctorIdList)
+            //{
+            //    doctorList.Add(await GetDoctor(doctor));
+            //}
+
 
             //List<Doctor> thisUsersDoctors = _context.Doctor.Where(doctor => doctor.ParentDoctor.All( => thisUser.Id.Contains(id)));
+            List<SingleDoctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
+
             return View(doctorList);
         }
         public IActionResult Add()
         {
             return View();
         }
-        public async Task<SingleDoctor> GetDoctor(string doctorId)
-        {
-            string apiKey = GetAPIKey();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors/{doctorId}?user_key={apiKey}");
-            var result = await response.Content.ReadAsAsync<SingleDoctor>();     
-
-            return result;
-        }
+        
 
 
 
@@ -157,7 +147,7 @@ namespace TrackDr.Controllers
        [HttpPost]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             Parent newUser = new Parent();
 
             newUser.HouseNumber = newUserInfo.HouseNumber;
@@ -167,14 +157,11 @@ namespace TrackDr.Controllers
             newUser.State = newUserInfo.State;
             newUser.ZipCode = newUserInfo.ZipCode;
             newUser.ParentId = thisUser.Id;
-
             newUser.PhoneNumber = newUserInfo.PhoneNumber;
             newUser.Email = thisUser.Email;
 
-            
 
-            _context.Parent.Add(newUser);
-            _context.SaveChanges();
+            _dbHelper.AddNewParent(newUser);
 
             return View("Search");
         }
@@ -186,11 +173,10 @@ namespace TrackDr.Controllers
 
         public IActionResult UserInformation()
         {
-            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            Parent found = _context.Parent.Find(thisUser.Id);
-            if (found != null)
+            Parent foundParent = _dbHelper.FindParentById(_dbHelper.GetCurrentUser(User.Identity.Name).Id);
+            if (foundParent != null)
             {
-                return View("UserInformation", found);
+                return View("UserInformation", foundParent);
             }
             return View("Search");
         }
@@ -213,10 +199,7 @@ namespace TrackDr.Controllers
             updatedUser.PhoneNumber = user.PhoneNumber;
             updatedUser.ParentId = user.ParentId;
 
-            _context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.Update(updatedUser);
-            _context.SaveChanges();
-
+            _dbHelper.UpdateParent(updatedUser);
             
 
             return View("UserInformation", updatedUser);
@@ -225,7 +208,7 @@ namespace TrackDr.Controllers
         [HttpGet]
         public IActionResult EditUserInformation(string ParentId)
         {
-            Parent found = _context.Parent.Find(ParentId);
+            Parent found = _dbHelper.FindParentById(ParentId);
             if (found != null)
             {
                 return View("EditUserInformation", found);
