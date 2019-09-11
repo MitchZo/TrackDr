@@ -138,7 +138,7 @@ namespace TrackDr.Controllers
 
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
-            SingleDoctor doctor = await GetDoctor(doctorId);
+            SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
             return View(doctor);
         }
         public IActionResult Add()
