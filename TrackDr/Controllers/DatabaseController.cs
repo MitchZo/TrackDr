@@ -20,6 +20,7 @@ namespace TrackDr.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
         public bool CanAddDoctor(Doctor doctor)
         {

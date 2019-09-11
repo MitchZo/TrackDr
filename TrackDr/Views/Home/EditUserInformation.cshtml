@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "EditUserInformation";
+}
+
+<h1>Edit My Information</h1>
+@model TrackDr.Models.Parent
+
+<form action="/Home/EditUserInformation" method="post">
+    <input type="text" name="HouseNumber" value="@Model.HouseNumber"/>
+    <input type="text" name="Street"  value="@Model.Street"/>
+    <input type="text" name="Street2" value="@Model.Street2" />
+    <input type="text" name="City" value="@Model.City" />
+    <input type="text" name="State" value="@Model.State" />
+    <input type="text" name="ZipCode"  value="@Model.ZipCode"/>
+    <input type="hidden" name="ParentId" value="@Model.ParentId" />
+    <input type="submit" name="Save Changes" />
+</form>

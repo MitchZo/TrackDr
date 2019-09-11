@@ -63,21 +63,7 @@ namespace TrackDr.Controllers
 
         //}
 
-        //public IActionResult AddDoctor(Datum doctor)
-        //{
-        //    string apiKey = GetAPIKey();
-        //    var client = new HttpClient();
-        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
-        //    var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&skip=0&user_key={apiKey}");
-        //    var test = await response.Content.ReadAsAsync<Rootobject>();
-        //    AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-        //    string uid = test.data[6].uid;
-        //    Doctor newDoctor = new Doctor();
-        //    newDoctor.Id = uid;
-        //    _context.Doctor.Add(newDoctor);
-        //    _context.SaveChanges();
-        //    return View("ListDoctor", newDoctor);
-        //}
+
 
         public IActionResult ListDoctor()
         {
@@ -101,7 +87,6 @@ namespace TrackDr.Controllers
             return View("ListDoctors", result);
         }
 
-        //[HttpPost]
         public IActionResult AddDoctor(string doctorUid)
         {
             AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
@@ -166,12 +151,15 @@ namespace TrackDr.Controllers
             return result;
         }
 
-        // saves the user's address to the UserDb as well as the user's Id number and their ASP Id
-        [HttpPost]
+
+
+        //saves the user's address to the UserDb as well as the user's Id number and their ASP Id
+       [HttpPost]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
             AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            Parent newUser = new Parent();
+            Parent newUser = _context.Parent.Find(newUserInfo.ParentId);
+
             newUser.HouseNumber = newUserInfo.HouseNumber;
             newUser.Street = newUserInfo.Street;
             newUser.Street2 = newUserInfo.Street2;
@@ -179,6 +167,11 @@ namespace TrackDr.Controllers
             newUser.State = newUserInfo.State;
             newUser.ZipCode = newUserInfo.ZipCode;
             newUser.ParentId = thisUser.Id;
+
+            newUser.PhoneNumber = newUserInfo.PhoneNumber;
+            newUser.Email = thisUser.Email;
+
+            
 
             _context.Parent.Add(newUser);
             _context.SaveChanges();
@@ -191,11 +184,55 @@ namespace TrackDr.Controllers
             return View();
         }
 
-        public IActionResult UserInformaton()
+        public IActionResult UserInformation()
         {
-            return View();
+            AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            Parent found = _context.Parent.Find(thisUser.Id);
+            if (found != null)
+            {
+                return View("UserInformation", found);
+            }
+            return View("Search");
         }
 
 
+        [HttpPost]
+        public IActionResult EditUserInformation(Parent user)
+        {
+            // AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+
+            Parent updatedUser = new Parent();
+            updatedUser.HouseNumber = user.HouseNumber;
+            updatedUser.Street = user.Street;
+            updatedUser.Street2 = user.Street2;
+            updatedUser.City = user.City;
+            updatedUser.State = user.State;
+            updatedUser.ZipCode = user.ZipCode;
+            updatedUser.ParentId = user.ParentId;
+            updatedUser.Email = user.Email;
+            updatedUser.PhoneNumber = user.PhoneNumber;
+            updatedUser.ParentId = user.ParentId;
+
+            _context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.Update(updatedUser);
+            _context.SaveChanges();
+
+            
+
+            return View("UserInformation", updatedUser);
+        }
+
+        [HttpGet]
+        public IActionResult EditUserInformation(string ParentId)
+        {
+            Parent found = _context.Parent.Find(ParentId);
+            if (found != null)
+            {
+                return View("EditUserInformation", found);
+
+            }
+
+            return View("Search");
+        }
     }
 }
