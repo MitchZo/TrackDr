@@ -158,7 +158,7 @@ namespace TrackDr.Controllers
         public IActionResult RegisterUser(Parent newUserInfo)
         {
             AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
-            Parent newUser = _context.Parent.Find(newUserInfo.ParentId);
+            Parent newUser = new Parent();
 
             newUser.HouseNumber = newUserInfo.HouseNumber;
             newUser.Street = newUserInfo.Street;
