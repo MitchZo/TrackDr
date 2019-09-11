@@ -22,9 +22,11 @@ namespace TrackDr.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<Child> Child { get; set; }
+        public virtual DbSet<ChildDoctor> ChildDoctor { get; set; }
         public virtual DbSet<Doctor> Doctor { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<UserDoctor> UserDoctor { get; set; }
+        public virtual DbSet<Parent> Parent { get; set; }
+        public virtual DbSet<ParentDoctor> ParentDoctor { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,8 +34,7 @@ namespace TrackDr.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
-
-            }
+            } //MODIFIED CHANGE BACK TO THE !OPTIONSbUILDER
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -142,63 +143,74 @@ namespace TrackDr.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
+            modelBuilder.Entity<Child>(entity =>
+            {
+                entity.Property(e => e.ParentId).HasMaxLength(450);
+
+                entity.HasOne(d => d.Parent)
+                    .WithMany(p => p.Child)
+                    .HasForeignKey(d => d.ParentId)
+                    .HasConstraintName("FK__Child__ParentId__4D94879B");
+            });
+
+            modelBuilder.Entity<ChildDoctor>(entity =>
+            {
+                entity.Property(e => e.ChildDoctorId).ValueGeneratedNever();
+
+                entity.Property(e => e.DoctorId).HasMaxLength(450);
+
+                entity.HasOne(d => d.Child)
+                    .WithMany(p => p.ChildDoctor)
+                    .HasForeignKey(d => d.ChildId)
+                    .HasConstraintName("FK__ChildDoct__Child__5165187F");
+
+                entity.HasOne(d => d.Doctor)
+                    .WithMany(p => p.ChildDoctor)
+                    .HasForeignKey(d => d.DoctorId)
+                    .HasConstraintName("FK__ChildDoct__Docto__5070F446");
+            });
+
             modelBuilder.Entity<Doctor>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.DoctorId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<Parent>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.ParentId).ValueGeneratedNever();
 
-                entity.Property(e => e.City)
-                    .IsRequired()
-                    .HasMaxLength(32);
+                entity.Property(e => e.City).HasMaxLength(64);
 
-                entity.Property(e => e.HouseNumber)
-                    .IsRequired()
-                    .HasMaxLength(32);
+                entity.Property(e => e.Email).HasMaxLength(128);
 
-                entity.Property(e => e.State)
-                    .IsRequired()
-                    .HasMaxLength(2);
+                entity.Property(e => e.HouseNumber).HasMaxLength(16);
 
-                entity.Property(e => e.Street)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                entity.Property(e => e.PhoneNumber).HasMaxLength(11);
 
-                entity.Property(e => e.Street2).HasMaxLength(256);
+                entity.Property(e => e.State).HasMaxLength(32);
 
-                entity.Property(e => e.UserId).HasMaxLength(450);
+                entity.Property(e => e.Street).HasMaxLength(64);
 
-                entity.Property(e => e.ZipCode)
-                    .IsRequired()
-                    .HasMaxLength(5);
+                entity.Property(e => e.Street2).HasMaxLength(64);
 
-                entity.HasOne(d => d.UserNavigation)
-                    .WithMany(p => p.User)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__User__UserId__5070F446");
-
+                entity.Property(e => e.ZipCode).HasMaxLength(10);
             });
 
-            modelBuilder.Entity<UserDoctor>(entity =>
+            modelBuilder.Entity<ParentDoctor>(entity =>
             {
                 entity.Property(e => e.DoctorId).HasMaxLength(450);
 
-                entity.Property(e => e.UserId).HasMaxLength(450);
+                entity.Property(e => e.ParentId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Doctor)
-                    .WithMany(p => p.UserDoctor)
+                    .WithMany(p => p.ParentDoctor)
                     .HasForeignKey(d => d.DoctorId)
-                    .HasConstraintName("FK__UserDocto__Docto__5165187F");
+                    .HasConstraintName("FK__ParentDoc__Docto__5441852A");
 
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserDoctor)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__UserDocto__UserI__52593CB8");
-
+                entity.HasOne(d => d.Parent)
+                    .WithMany(p => p.ParentDoctor)
+                    .HasForeignKey(d => d.ParentId)
+                    .HasConstraintName("FK__ParentDoc__Paren__5535A963");
             });
         }
     }
