@@ -3,34 +3,32 @@
     ViewData["Title"] = "DoctorDetails";
 }
 
+@model TrackDr.Models.SingleDoctor
 <h1>Doctor Details</h1>
 
 <table class="table">
     <tr>
         <th>Title:</th>
         <th>Name:</th>
-        <th></th>
         <th>Gender:</th>
         <th>State:</th>
         <th>Specialty:</th>
-
+        <th>Bio:</th>
     </tr>
 
-    @foreach (var doctor in Model.data)
-    {
-        <tr>
-            <td>@doctor.profile.title</td>
-            <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-            <td>@doctor.profile.gender</td>
-            @foreach (var location in doctor.practices)
-            {
-                <td>@location.visit_address.state</td>
-            }
-            @foreach (var specialty in doctor.specialties)
-            {
-                <td>@specialty.name</td>
-            }
-            <td>@doctor.profile.bio</td>
-        </tr>
-    }
+    <tr>
+        <td>@Model.data.profile.title</td>
+        <td>@Model.data.profile.first_name @Model.data.profile.last_name</td>
+        <td>@Model.data.profile.gender</td>
+        @foreach (var location in Model.data.practices)
+        {
+            <td>@location.visit_address.state</td>
+        }
+        @foreach (var specialty in Model.data.specialties)
+        {
+            <td>@specialty.name</td>
+        }
+        <td>@Model.data.profile.bio</td>
+    </tr>
+
 </table>

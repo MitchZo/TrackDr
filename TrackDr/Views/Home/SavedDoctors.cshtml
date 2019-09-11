@@ -6,7 +6,7 @@
 @model IEnumerable<TrackDr.Models.SingleDoctor>
 
 <h1>Saved Doctors</h1>
-@{Console.WriteLine("stop point"); }
+
 <table class="table">
     <tr>
         <th>Title:</th>
@@ -14,17 +14,13 @@
         @*<th>Specialty:</th>*@
     </tr>
 
-    
-        @foreach(var doctor in Model)
-        {
-
+    @foreach (var doctor in Model)
+    {
         <tr>
             <td>@doctor.data.profile.first_name</td>
 
-
-            <td>@Html.ActionLink("More Details", "DoctorDetails", "Home")</td>
+            @{string doctorId = doctor.data.uid;}
+            <td>@Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" })</td>
         </tr>
-            
-        }
     }
 </table>

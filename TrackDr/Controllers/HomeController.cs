@@ -136,6 +136,12 @@ namespace TrackDr.Controllers
             //List<Doctor> thisUsersDoctors = _context.Doctor.Where(doctor => doctor.ParentDoctor.All( => thisUser.Id.Contains(id)));
             return View(doctorList);
         }
+
+        public async Task<IActionResult> DoctorDetails(string doctorId)
+        {
+            SingleDoctor doctor = await GetDoctor(doctorId);
+            return View(doctor);
+        }
         public IActionResult Add()
         {
             return View();
