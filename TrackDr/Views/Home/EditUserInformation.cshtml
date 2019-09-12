@@ -11,7 +11,9 @@
     <input type="text" name="Street"  value="@Model.Street"/>
     <input type="text" name="Street2" value="@Model.Street2" />
     <input type="text" name="City" value="@Model.City" />
-    <input type="text" name="State" value="@Model.State" />
+    <div class="select" style="width: 188px;">
+         @Html.DropDownListFor(m => m.State, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State", new { @class = "form-control" })
+    </div>
     <input type="text" name="ZipCode"  value="@Model.ZipCode"/>
     <input type="hidden" name="ParentId" value="@Model.ParentId" />
     <input type="submit" name="Save Changes" />

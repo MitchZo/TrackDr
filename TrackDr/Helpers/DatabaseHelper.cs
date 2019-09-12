@@ -62,7 +62,7 @@ namespace TrackDr.Helpers
         }
         public AspNetUsers GetCurrentUser(string userName)
         {
-            return _context.AspNetUsers.Where(u => u.UserName == userName).First();
+             return _context.AspNetUsers.Where(u => u.Email == userName).First(); // TODO add validation to makes sure that the user is logged in - if they are not logged in, re-rout to the register page before they are allowed to login! 
         }
         public void AddNewDoctor(Doctor newDoctor)
         {
