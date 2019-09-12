@@ -42,7 +42,7 @@ namespace TrackDr.Helpers
                     currentParentDoctors.Add(relationship);
                 }
             }
-            if(relationshipList.Count == 0)
+            if(currentParentDoctors.Count == 0)
             {
                 isValid = true;
             }
