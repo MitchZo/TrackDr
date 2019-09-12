@@ -97,7 +97,7 @@ namespace TrackDr.Controllers
                 {
                     _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
                 }
-                return View("Search");
+                return RedirectToAction("SavedDoctors"); 
             }
             return View("Search");
         }
