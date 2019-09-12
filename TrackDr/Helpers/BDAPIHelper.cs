@@ -36,7 +36,16 @@ namespace TrackDr.Helpers
             string apiKey = GetAPIKey();
             var client = new HttpClient();
             client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&user_key={apiKey}");
+            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&user_key={apiKey}"); //EDITED THIS 
+            return await response.Content.ReadAsAsync<Rootobject>();
+        }
+
+        public async Task<Rootobject> GetDoctorListByState(string userInput, string userState)
+        {
+            string apiKey = GetAPIKey();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.betterdoctor.com");
+            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&location={userState}&user_key={apiKey}"); //EDITED THIS 
             return await response.Content.ReadAsAsync<Rootobject>();
         }
     }

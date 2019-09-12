@@ -83,12 +83,22 @@ namespace TrackDr.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string userInput)
+        public async Task<IActionResult> Search(string userInput, string userState)
         {
-            var result = await _bDAPIHelper.GetDoctorList(userInput);
+            Rootobject result;
+            if (userState != null)
+            {
+                result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
+
+            }
+            else
+            {
+                result = await _bDAPIHelper.GetDoctorList(userInput);
+            }
 
             return View("ListDoctors", result);
         }
+
 
         public IActionResult AddDoctor(string doctorUid)
         {
@@ -234,3 +244,7 @@ namespace TrackDr.Controllers
         }
     }
 }
+
+// when the user adds in a new docto we will save the iod the first na,e and the last name
+//when we display  that information to the saved deoctors list we can display the first and laset name from the database
+//and when we click display extra information we ping to the api to get that additional information 

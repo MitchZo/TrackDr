@@ -11,5 +11,7 @@ namespace TrackDr.Helpers
         Task<SingleDoctor> GetDoctor(string doctorId);
         string GetAPIKey();
         Task<Rootobject> GetDoctorList(string userInput);
+
+        Task<Rootobject> GetDoctorListByState(string userInput, string userState);
     }
 }
