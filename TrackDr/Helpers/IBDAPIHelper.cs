@@ -10,8 +10,10 @@ namespace TrackDr.Helpers
     {
         Task<SingleDoctor> GetDoctor(string doctorId);
         string GetAPIKey();
-        Task<Rootobject> GetDoctorList(string userInput);
+        Task<Rootobject> GetDoctorList(string userInput, string userState, string userInsurance);
 
-        Task<Rootobject> GetDoctorListByState(string userInput, string userState);
+        //Task<Rootobject> GetDoctorListByState(string userInput, string userState);
+
+        //Task<Rootobject> GetDoctorListByInsurance(string userInput, string userState, string userInsurance);
     }
 }

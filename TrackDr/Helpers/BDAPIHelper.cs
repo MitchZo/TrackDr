@@ -31,22 +31,40 @@ namespace TrackDr.Helpers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["BDAPIKeyValue"];
         }
-        public async Task<Rootobject> GetDoctorList(string userInput)
+        //public async Task<Rootobject> GetDoctorList(string userInput, string userState, string userInsurance)
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&user_key={apiKey}"); //EDITED THIS 
+        //    return await response.Content.ReadAsAsync<Rootobject>();
+        //}
+
+        //public async Task<Rootobject> GetDoctorList(string userInput)
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&user_key={apiKey}"); //EDITED THIS 
+        //    return await response.Content.ReadAsAsync<Rootobject>();
+        //}
+        public async Task<Rootobject> GetDoctorList(string userInput, string userState, string userInsurance)
         {
             string apiKey = GetAPIKey();
             var client = new HttpClient();
             client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&user_key={apiKey}"); //EDITED THIS 
+            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&location={userState}&insurance_uid={userInsurance}&user_key={apiKey}"); //EDITED THIS 
             return await response.Content.ReadAsAsync<Rootobject>();
         }
 
-        public async Task<Rootobject> GetDoctorListByState(string userInput, string userState)
-        {
-            string apiKey = GetAPIKey();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.betterdoctor.com");
-            var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&location={userState}&user_key={apiKey}"); //EDITED THIS 
-            return await response.Content.ReadAsAsync<Rootobject>();
-        }
+        //public async Task<Rootobject> GetDoctorListByInsurance(string userInput, string userState, string userInsurance)
+        //{
+        //    string apiKey = GetAPIKey();
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://api.betterdoctor.com");
+        //    var response = await client.GetAsync($"/2016-03-01/doctors?query={userInput}&specialty_uid=pediatrician&limit=100&location={userState}&insurance_uid={userInsurance}&user_key={apiKey}"); //EDITED THIS 
+        //    return await response.Content.ReadAsAsync<Rootobject>();
+
+        //}
     }
 }

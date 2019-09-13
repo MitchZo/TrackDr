@@ -32,5 +32,6 @@ namespace TrackDr.Models
 
         public virtual ICollection<Child> Child { get; set; }
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
+        
     }
 }
