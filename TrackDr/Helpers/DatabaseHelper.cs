@@ -118,6 +118,28 @@ namespace TrackDr.Helpers
             _context.SaveChanges();
         }
 
-        
+        public void DeleteDoctor(ParentDoctor parentDoctor)
+        {
+            _context.ParentDoctor.Remove(parentDoctor);
+            _context.SaveChanges();
+        }
+
+        public ParentDoctor FindParentDoctorRelationship(string doctorId, AspNetUsers currentUser)
+        {
+            List<ParentDoctor> parentDoctorRelationship = _context.ParentDoctor.ToList();
+            foreach (var relationship in parentDoctorRelationship)
+            {
+                if (relationship.DoctorId == doctorId)
+                {
+                    if(relationship.ParentId == currentUser.Id)
+                    {
+                    return relationship;
+                    }
+                }
+            }
+            return _context.ParentDoctor.Find(doctorId);
+        }
+
+
     }
 }

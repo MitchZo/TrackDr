@@ -21,6 +21,7 @@
 
             @{string doctorId = doctor.data.uid;}
             <td>@Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" })</td>
+            <td>@Html.ActionLink("Delete", "DeleteDoctor", new { doctorId })</td>
         </tr>
     }
 </table>

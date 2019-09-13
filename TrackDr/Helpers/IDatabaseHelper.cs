@@ -17,5 +17,7 @@ namespace TrackDr.Helpers
         void AddNewParent(Parent newUser);
         Parent FindParentById(string userId);
         void UpdateParent(Parent updatedUser);
+        void DeleteDoctor(ParentDoctor parentDoctor);
+        ParentDoctor FindParentDoctorRelationship(string doctorId, AspNetUsers currentUser);
     }
 }
