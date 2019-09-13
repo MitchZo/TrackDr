@@ -9,5 +9,6 @@ namespace TrackDr.Models
     {
         public string UserInput { get; set; }
         public string UserState { get; set; }
+        public List<string> UserBaseInsurance { get; set; }
     }
 }

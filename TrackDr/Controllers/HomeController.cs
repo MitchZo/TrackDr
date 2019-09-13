@@ -213,6 +213,12 @@ namespace TrackDr.Controllers
 
             return View("Search");
         }
+
+        // this returns a list of unique insurance base names
+        public List<string> InsuranceBaseName()
+        {
+            return _dbHelper.GetAllBaseInsuranceNames();
+        }
     }
 }
 

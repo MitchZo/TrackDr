@@ -144,6 +144,19 @@ namespace TrackDr.Helpers
             return _context.ParentDoctor.Find(doctorId);
         }
 
+        public List<string> GetAllBaseInsuranceNames()
+        {
+            List<Insurance> insuranceList =  _context.Insurance.ToList();
+            List<string> insuranceBaseNameList = new List<string>();
+            foreach (var name in insuranceList)
+            {
+                if (!insuranceBaseNameList.Contains(name.InsuranceBaseName))
+                {
+                    insuranceBaseNameList.Add(name.InsuranceBaseName);
+                }
+            }
+            return insuranceBaseNameList;
+        }
 
     }
 }
