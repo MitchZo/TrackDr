@@ -17,5 +17,6 @@ namespace TrackDr.Helpers
         void AddNewParent(Parent newUser);
         Parent FindParentById(string userId);
         void UpdateParent(Parent updatedUser);
+        Parent GetCurrentParent(AspNetUsers currentUser);
     }
 }
