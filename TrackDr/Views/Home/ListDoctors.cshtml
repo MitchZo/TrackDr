@@ -1,11 +1,16 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "ListDoctor";
 }
 
 <h1>List Doctor</h1>
 
 @model TrackDr.Models.Rootobject
+
+@*@if (!User.Identity.IsAuthenticated)
+{
+    <p>Please Login to View More Information or Save Doctors</p>
+}*@
+
 
 <table class="table">
     <tr>
@@ -23,23 +28,25 @@
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
             @foreach (var location in doctor.practices)
-            {
+    {
                 <td>@location.visit_address.state</td>
-            }
+    }
             @foreach (var specialty in doctor.specialties)
-            {
+    {
                 <td>@specialty.name</td>
-            }
+    }
+
+            @*@if (User.Identity.IsAuthenticated)
+            {*@
             <form action="/Home/AddDoctor" method="post">
-                @{string doctorId = doctor.uid;}
+                @*string doctorId = doctor.uid;*@
                 @*<td> <input type="submit" name="" value="Add" /> </td>*@
             </form>
-            @{string doctorUid = doctor.uid;}
+               @{string doctorUid = doctor.uid; }
 
-            <td>@Html.ActionLink("Add", "AddDoctor",  new { doctorUid })</td>
-            
+            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
+                @*}*@
 
         </tr>
     }
 </table>
-

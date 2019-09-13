@@ -11,9 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TrackDr.Models;
 using TrackDr.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TrackDr.Controllers
 {
+    [Authorize] // this allows you to access onnly if you are logged in 
+    // can also add [allowanon] to be viewed
     public class HomeController : Controller
     {
         private readonly IDatabaseHelper _dbHelper;
@@ -25,6 +28,8 @@ namespace TrackDr.Controllers
             _gAPIHelper = gAPIHelper;
             _bDAPIHelper = bDAPIHelper;
         }
+
+        [AllowAnonymous]
         public IActionResult Index()
         {
            // AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -39,6 +44,7 @@ namespace TrackDr.Controllers
             return View("Search");
         }
 
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
@@ -49,30 +55,37 @@ namespace TrackDr.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [AllowAnonymous]
         public IActionResult ListDoctor()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Search()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Search(string userInput, string userState)
+        public async Task<IActionResult> Search(string userInput, string userState, string userInsurance)
         {
             Rootobject result;
-            if (userState != null)
-            {
-                result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
+            //if (userState != null)
+            //{
+            //    result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
 
-            }
-            else
-            {
-                result = await _bDAPIHelper.GetDoctorList(userInput);
-            }
-
+            //}
+            //else if (userInsurance != null)
+            //{
+            //    result = await _bDAPIHelper.GetDoctorListByInsurance(userInput, userState, userInsurance);
+            //}
+            //else
+            //{
+            //    result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
+            //}
+            result = await _bDAPIHelper.GetDoctorList(userInput, userState, userInsurance);
             return View("ListDoctors", result);
         }
 
@@ -96,8 +109,9 @@ namespace TrackDr.Controllers
                 if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, newDoctor.DoctorId))
                 {
                     _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+
                 }
-                return View("Search");
+                return RedirectToAction("SavedDoctors"); 
             }
             return View("Search");
         }
