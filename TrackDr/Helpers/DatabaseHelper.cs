@@ -83,6 +83,11 @@ namespace TrackDr.Helpers
             _context.Parent.Add(newUser);
             _context.SaveChanges();
         }
+        public void AddNewChild(Child newChild)
+        {
+            _context.Child.Add(newChild);
+            _context.SaveChanges();
+        }
         public List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName)
         {
             AspNetUsers thisUser = GetCurrentUser(userName);
