@@ -25,6 +25,7 @@ namespace TrackDr.Models
         public virtual DbSet<Child> Child { get; set; }
         public virtual DbSet<ChildDoctor> ChildDoctor { get; set; }
         public virtual DbSet<Doctor> Doctor { get; set; }
+        public virtual DbSet<Insurance> Insurance { get; set; }
         public virtual DbSet<Parent> Parent { get; set; }
         public virtual DbSet<ParentDoctor> ParentDoctor { get; set; }
 
@@ -34,9 +35,7 @@ namespace TrackDr.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
-
             }
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -147,6 +146,8 @@ namespace TrackDr.Models
 
             modelBuilder.Entity<Child>(entity =>
             {
+                entity.Property(e => e.FirstName).HasMaxLength(64);
+
                 entity.Property(e => e.ParentId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Parent)
@@ -177,25 +178,54 @@ namespace TrackDr.Models
                 entity.Property(e => e.DoctorId).ValueGeneratedNever();
             });
 
+            modelBuilder.Entity<Insurance>(entity =>
+            {
+                entity.HasKey(e => e.InsuranceUid)
+                    .HasName("PK__Insuranc__E770AC3DDC00211E");
+
+                entity.Property(e => e.InsuranceUid)
+                    .HasColumnName("InsuranceUID")
+                    .HasMaxLength(128)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.InsuranceBaseName)
+                    .IsRequired()
+                    .HasMaxLength(64);
+
+                entity.Property(e => e.InsuranceSpecialtyName).HasMaxLength(128);
+            });
+
             modelBuilder.Entity<Parent>(entity =>
             {
                 entity.Property(e => e.ParentId).ValueGeneratedNever();
 
-                entity.Property(e => e.City).HasMaxLength(64);
+                entity.Property(e => e.City)
+                    .IsRequired()
+                    .HasMaxLength(64);
 
                 entity.Property(e => e.Email).HasMaxLength(128);
 
-                entity.Property(e => e.HouseNumber).HasMaxLength(16);
+                entity.Property(e => e.HouseNumber)
+                    .IsRequired()
+                    .HasMaxLength(16);
+
+                entity.Property(e => e.InsuranceBaseName).HasMaxLength(64);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(11);
 
-                entity.Property(e => e.State).HasMaxLength(32);
+                entity.Property(e => e.State)
+                    .IsRequired()
+                    .HasMaxLength(32);
 
-                entity.Property(e => e.Street).HasMaxLength(64);
+                entity.Property(e => e.Street)
+                    .IsRequired()
+                    .HasMaxLength(64);
 
                 entity.Property(e => e.Street2).HasMaxLength(64);
 
-                entity.Property(e => e.ZipCode).HasMaxLength(10);
+                entity.Property(e => e.ZipCode)
+                    .IsRequired()
+                    .HasMaxLength(10);
             });
 
             modelBuilder.Entity<ParentDoctor>(entity =>

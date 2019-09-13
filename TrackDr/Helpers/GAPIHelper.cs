@@ -21,14 +21,14 @@ namespace TrackDr.Helpers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["GAPIKeyValue"];
         }
-        public string GooglefyUserAddress(string userName)
-        {
-            AspNetUsers currentUser = _dbHelper.GetCurrentUser(userName);
-            _dbHelper.GetCurrentParent(currentUser);
-        }
-        public string GooglefyString(string toBeGooglefied)
-        {
+        //public string GooglefyUserAddress(string userName)
+        //{
+        //    AspNetUsers currentUser = _dbHelper.GetCurrentUser(userName);
+        //    _dbHelper.GetCurrentParent(currentUser);
+        //}
+        //public string GooglefyString(string toBeGooglefied)
+        //{
 
-        }
+        //}
     }
 }
