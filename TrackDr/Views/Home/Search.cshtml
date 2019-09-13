@@ -9,6 +9,7 @@
 <form action="/Home/Search" method="post">
     <input type="text" name="userInput" placeholder="Specialty (optional)" />
     @*<input type="text" name="userState" placeholder="State Abbreviation"/>*@
+<input type="text" name="userInsurance" placeholder="Insurance Carrier" />
     <div class="select" style="width: 188px;">
         @Html.DropDownListFor(m => m.UserState, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State (optional)", new { @class = "form-control" })
     </div>
