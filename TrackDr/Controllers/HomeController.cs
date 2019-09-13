@@ -128,16 +128,19 @@ namespace TrackDr.Controllers
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
             return View(doctor);
         }
-        public IActionResult Add()
+        public IActionResult DeleteDoctor(string doctorId)
         {
-            return View();
+            var userDelete = _dbHelper.GetCurrentUser(User.Identity.Name);
+            var foundDoctor = _dbHelper.FindParentDoctorRelationship(doctorId, userDelete);
+            _dbHelper.DeleteDoctor(foundDoctor);
+            return RedirectToAction("SavedDoctors");
         }
-        
+
 
 
 
         //saves the user's address to the UserDb as well as the user's Id number and their ASP Id
-       [HttpPost]
+        [HttpPost]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
