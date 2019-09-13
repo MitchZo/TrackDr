@@ -23,10 +23,39 @@ namespace TrackDr.Helpers
         }
         public string GooglefyUserAddress(string userName)
         {
+            string returnString = "";
             AspNetUsers currentUser = _dbHelper.GetCurrentUser(userName);
-            _dbHelper.GetCurrentParent(currentUser);
+            Parent currentParent = _dbHelper.GetCurrentParent(currentUser);
+
+            returnString += GooglefyString(currentParent.HouseNumber + "+");
+            returnString += GooglefyString(currentParent.Street + "+");
+
+            if(currentParent.Street2 != null)
+            { returnString += GooglefyString(currentParent.Street2) + "+"; }
+
+            returnString += GooglefyString(currentParent.City) + "+";
+            returnString += GooglefyString(currentParent.State);
+
+            return returnString;
         }
         public string GooglefyString(string toBeGooglefied)
+        {
+            string returnString = "";
+            string[] words = toBeGooglefied.Split(' ');
+            if (words.Length > 0)
+            {
+                foreach (string word in words)
+                {
+                    returnString += word;
+                }
+            }
+            else
+            {
+                return toBeGooglefied;
+            }
+            return returnString;
+        }
+        public void DetermineDistance(string startAddress, string endAddress)
         {
 
         }
