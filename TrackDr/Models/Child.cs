@@ -12,6 +12,7 @@ namespace TrackDr.Models
 
         public int ChildId { get; set; }
         public string ParentId { get; set; }
+        public string FirstName { get; set; }
 
         public virtual Parent Parent { get; set; }
         public virtual ICollection<ChildDoctor> ChildDoctor { get; set; }
