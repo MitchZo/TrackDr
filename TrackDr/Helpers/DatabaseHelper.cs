@@ -64,6 +64,10 @@ namespace TrackDr.Helpers
         {
              return _context.AspNetUsers.Where(u => u.Email == userName).First(); // TODO add validation to makes sure that the user is logged in - if they are not logged in, re-rout to the register page before they are allowed to login! 
         }
+        public Parent GetCurrentParent(AspNetUsers currentUser)
+        {
+            return _context.Parent.Find(currentUser.Id);
+        }
         public void AddNewDoctor(Doctor newDoctor)
         {
             _context.Doctor.Add(newDoctor);
