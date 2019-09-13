@@ -29,9 +29,9 @@ namespace TrackDr.Models
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
+        public string InsuranceBaseName { get; set; }
 
         public virtual ICollection<Child> Child { get; set; }
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
-        
     }
 }

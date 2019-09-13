@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace TrackDr.Models
@@ -16,8 +15,8 @@ namespace TrackDr.Models
 
         public virtual ICollection<ChildDoctor> ChildDoctor { get; set; }
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
-
     }
+
     public class Rootobject
     {
         public Meta meta { get; set; }
@@ -154,7 +153,7 @@ namespace TrackDr.Models
         public string provider_url { get; set; }
     }
 
-    public class Insurance
+    public partial class Insurance
     {
         public Insurance_Plan insurance_plan { get; set; }
         public Insurance_Provider insurance_provider { get; set; }
@@ -190,4 +189,3 @@ namespace TrackDr.Models
         public string end_date { get; set; }
     }
 }
-
