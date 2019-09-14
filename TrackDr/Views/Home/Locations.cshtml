@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "Locations";
+}
+
+@model SingleDoctor
+
+<h1>Locations</h1>
+
+<table></table>
+@{ foreach (Practice location in Model.data.practices)
+    {
+        @location.visit_address;
+    }
+}
