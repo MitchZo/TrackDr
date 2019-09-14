@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace TrackDr.Models
 {
-
-    public class Rootobject
+    public class TravelInfo
     {
         public string[] destination_addresses { get; set; }
         public string[] origin_addresses { get; set; }
@@ -37,5 +36,4 @@ namespace TrackDr.Models
         public string text { get; set; }
         public int value { get; set; }
     }
-
 }
