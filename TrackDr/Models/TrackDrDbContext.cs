@@ -25,9 +25,9 @@ namespace TrackDr.Models
         public virtual DbSet<Child> Child { get; set; }
         public virtual DbSet<ChildDoctor> ChildDoctor { get; set; }
         public virtual DbSet<Doctor> Doctor { get; set; }
-        public virtual DbSet<Insurance> Insurance { get; set; }
         public virtual DbSet<Parent> Parent { get; set; }
         public virtual DbSet<ParentDoctor> ParentDoctor { get; set; }
+        public virtual DbSet<SavedInsurance> SavedInsurance { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -178,23 +178,6 @@ namespace TrackDr.Models
                 entity.Property(e => e.DoctorId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<Insurance>(entity =>
-            {
-                entity.HasKey(e => e.InsuranceUid)
-                    .HasName("PK__Insuranc__E770AC3DDC00211E");
-
-                entity.Property(e => e.InsuranceUid)
-                    .HasColumnName("InsuranceUID")
-                    .HasMaxLength(128)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.InsuranceBaseName)
-                    .IsRequired()
-                    .HasMaxLength(64);
-
-                entity.Property(e => e.InsuranceSpecialtyName).HasMaxLength(128);
-            });
-
             modelBuilder.Entity<Parent>(entity =>
             {
                 entity.Property(e => e.ParentId).ValueGeneratedNever();
@@ -205,9 +188,7 @@ namespace TrackDr.Models
 
                 entity.Property(e => e.Email).HasMaxLength(128);
 
-                entity.Property(e => e.HouseNumber)
-                    .IsRequired()
-                    .HasMaxLength(16);
+                entity.Property(e => e.HouseNumber).HasMaxLength(16);
 
                 entity.Property(e => e.InsuranceBaseName).HasMaxLength(64);
 
@@ -217,9 +198,7 @@ namespace TrackDr.Models
                     .IsRequired()
                     .HasMaxLength(32);
 
-                entity.Property(e => e.Street)
-                    .IsRequired()
-                    .HasMaxLength(64);
+                entity.Property(e => e.Street).HasMaxLength(64);
 
                 entity.Property(e => e.Street2).HasMaxLength(64);
 
@@ -243,6 +222,23 @@ namespace TrackDr.Models
                     .WithMany(p => p.ParentDoctor)
                     .HasForeignKey(d => d.ParentId)
                     .HasConstraintName("FK__ParentDoc__Paren__5535A963");
+            });
+
+            modelBuilder.Entity<SavedInsurance>(entity =>
+            {
+                entity.HasKey(e => e.InsuranceUid)
+                    .HasName("PK__Insuranc__E770AC3DBA24CC1B");
+
+                entity.Property(e => e.InsuranceUid)
+                    .HasColumnName("InsuranceUID")
+                    .HasMaxLength(128)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.InsuranceBaseName)
+                    .IsRequired()
+                    .HasMaxLength(64);
+
+                entity.Property(e => e.InsuranceSpecialtyName).HasMaxLength(128);
             });
         }
     }

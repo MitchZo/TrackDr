@@ -8,5 +8,8 @@ namespace TrackDr.Helpers
     public interface IGAPIHelper
     {
         string GetAPIKey();
+        string GooglefyUserAddress(string userName);
+        string GooglefyString(string toBeGooglefied);
+        void DetermineDistance(string startAddress, string endAddress);
     }
 }
