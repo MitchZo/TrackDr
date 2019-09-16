@@ -15,5 +15,6 @@ namespace TrackDr.Helpers
         //Task<Rootobject> GetDoctorListByState(string userInput, string userState);
 
         //Task<Rootobject> GetDoctorListByInsurance(string userInput, string userState, string userInsurance);
+        Task<Rootobject> GetDoctorsBaseOnInsurance(string userInsurance);
     }
 }

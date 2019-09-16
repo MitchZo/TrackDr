@@ -20,9 +20,18 @@
         <td>@Model.data.profile.title</td>
         <td>@Model.data.profile.first_name @Model.data.profile.last_name</td>
         <td>@Model.data.profile.gender</td>
-        @foreach (var location in Model.data.practices)
-        {
-            <td>@location.visit_address.state</td>
+        @{
+            List<string> stateList = new List<string>();
+            @foreach (var office in Model.data.practices)
+            {
+                if (!stateList.Contains(office.visit_address.state))
+                {
+
+                    <td>@office.visit_address.state</td>
+                    stateList.Add(office.visit_address.state);
+                }
+
+            }
         }
         @foreach (var specialty in Model.data.specialties)
         {
@@ -33,13 +42,13 @@
         {
             <td>@rating.image_url_small_2x</td>
         }
-        
+
         @foreach (var language in Model.data.profile.languages)
         {
             <td>@language.name</td>
         }
         <td><img src="@Model.data.profile.image_url" alt="Photo" /> </td>
-        
+
     </tr>
 
 </table>
