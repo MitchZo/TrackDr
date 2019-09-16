@@ -143,6 +143,23 @@ namespace TrackDr.Helpers
             return _context.ParentDoctor.Find(doctorId);
         }
 
+        //public List<SavedInsurance> GetAllBaseInsuranceNames()
+        //{
+        //    List<SavedInsurance> insuranceList =  _context.SavedInsurance.ToList();
+        //    List<SavedInsurance> insuranceBaseNameList = new List<SavedInsurance>();
+        //    foreach (var insurance in insuranceList)
+        //    {
+        //        foreach (var baseName in insurance.InsuranceBaseName)
+        //        {
+        //            if (!insuranceBaseNameList.Contains(insurance))
+        //            {
+        //                insuranceBaseNameList.Add(insurance);
+        //            }
+        //        }
+               
+        //    }
+        //    return insuranceBaseNameList;
+        //}
 
     }
 }
