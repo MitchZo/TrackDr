@@ -180,7 +180,7 @@ namespace TrackDr.Models
                 entity.Property(e => e.DoctorId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<Insurance>(entity =>
+            modelBuilder.Entity<SavedInsurance>(entity =>
             {
                 entity.HasKey(e => e.InsuranceUid)
                     .HasName("PK__Insuranc__E770AC3DDC00211E");
