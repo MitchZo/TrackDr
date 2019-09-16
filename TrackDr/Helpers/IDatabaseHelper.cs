@@ -21,6 +21,9 @@ namespace TrackDr.Helpers
         Parent GetCurrentParent(AspNetUsers currentUser);
         void DeleteDoctor(ParentDoctor parentDoctor);
         ParentDoctor FindParentDoctorRelationship(string doctorId, AspNetUsers currentUser);
-        //List<SavedInsurance> GetAllBaseInsuranceNames();
+        List<string> GetAllBaseInsuranceNames();
+        List<string> GetAllSpecialtyInsuranceNames(string baseInsuranceName);
+
+        string GetSpecialtyUID(string specialtyName);
     }
 }

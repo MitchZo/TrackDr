@@ -57,6 +57,17 @@ namespace TrackDr.Helpers
             return await response.Content.ReadAsAsync<Rootobject>();
         }
 
+        public async Task<Rootobject> GetDoctorsBaseOnInsurance(string userInsurance) // THIS IS NULL
+        {
+            string apiKey = GetAPIKey();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.betterdoctor.com");
+            var response = await client.GetAsync($"/2016-03-01/doctors?query=pediatrician&specialty_uid=pediatrician&insurance_uid={userInsurance}&skip=0&limit=10&user_key={apiKey}"); //EDITED THIS 
+            return await response.Content.ReadAsAsync<Rootobject>();
+        }
+
+
+
         //public async Task<Rootobject> GetDoctorListByInsurance(string userInput, string userState, string userInsurance)
         //{
         //    string apiKey = GetAPIKey();

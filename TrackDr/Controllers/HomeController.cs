@@ -1,4 +1,4 @@
-﻿
+﻿ 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace TrackDr.Controllers
 {
     [Authorize] // this allows you to access onnly if you are logged in 
-    // can also add [allowanon] to be viewed
     public class HomeController : Controller
     {
         private readonly IDatabaseHelper _dbHelper;
@@ -67,7 +66,6 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> Search(string userInput, string userState, string userInsurance)
         {
             Rootobject result;
-        
             result = await _bDAPIHelper.GetDoctorList(userInput, userState, userInsurance);
             return View("ListDoctors", result);
         }
@@ -231,11 +229,46 @@ namespace TrackDr.Controllers
         }
 
         //// this returns a list of unique insurance base names
-        //public IActionResult BaseInsurance()
+        public IActionResult BaseInsurance()
+        {
+            var insuranceBaseName = _dbHelper.GetAllBaseInsuranceNames();
+            return View(insuranceBaseName);
+        }
+        
+        public IActionResult SpecialtyInsuranceNames(string baseName)
+        {
+            var insuranceSpecialtyName = _dbHelper.GetAllSpecialtyInsuranceNames(baseName);
+            return View(insuranceSpecialtyName);
+
+        }
+
+        // this gets a UId based on the specialty insurance the user entered
+        //public string SpecialtyUIDFinder(string specialtyName)
         //{
-        //    var baseNames = _dbHelper.GetAllBaseInsuranceNames();
-        //    return View(baseNames);
+        //    var userInsurance = _dbHelper.GetSpecialtyUID(specialtyName); 
+        //    return userInsurance;
+
         //}
+
+        public async Task<IActionResult> ListDoctorsBasedOnInsurance( string specialtyName)
+        {
+            string uid = _dbHelper.GetSpecialtyUID(specialtyName);
+            Rootobject result;
+            result = await _bDAPIHelper.GetDoctorsBaseOnInsurance(uid);
+            return View("ListDoctorsBasedOnInsurance", result);
+        }
+
+        public void ListChoice(bool userInput)
+        {
+            if (userInput)
+            {
+                BaseInsurance();
+            }
+            else
+            {
+                Search();
+            }
+        }
     }
 }
 

@@ -70,6 +70,7 @@ namespace TrackDr.Helpers
         }
         public void AddNewDoctor(Doctor newDoctor)
         {
+            Thread.Sleep(300);
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
         }
@@ -148,23 +149,53 @@ namespace TrackDr.Helpers
             return _context.ParentDoctor.Find(doctorId);
         }
 
-        //public List<SavedInsurance> GetAllBaseInsuranceNames()
-        //{
-        //    List<SavedInsurance> insuranceList =  _context.SavedInsurance.ToList();
-        //    List<SavedInsurance> insuranceBaseNameList = new List<SavedInsurance>();
-        //    foreach (var insurance in insuranceList)
-        //    {
-        //        foreach (var baseName in insurance.InsuranceBaseName)
-        //        {
-        //            if (!insuranceBaseNameList.Contains(insurance))
-        //            {
-        //                insuranceBaseNameList.Add(insurance);
-        //            }
-        //        }
-               
-        //    }
-        //    return insuranceBaseNameList;
-        //}
+        public List<string> GetAllBaseInsuranceNames()
+        {
+            List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
+            List<string> insuranceBaseNameList = new List<string>();
+            foreach (var insurance in insuranceList)
+            {
+                foreach (var baseName in insurance.InsuranceBaseName)
+                {
+                    if (!insuranceBaseNameList.Contains(insurance.InsuranceBaseName))
+                    {
+                        insuranceBaseNameList.Add(insurance.InsuranceBaseName);
+                    }
+                }
 
+            }
+            return insuranceBaseNameList;
+        }
+
+        //this will look through the insurance database and find the specialty insurance types
+        //that correspond to the base insurance name the user choses
+        //it will return a list of strings 
+        public List<string> GetAllSpecialtyInsuranceNames(string baseName)
+        {
+            List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
+            List<string> specialtyNames = new List<string>();
+           foreach (var insurance in insuranceList)
+            {
+                if (insurance.InsuranceBaseName == baseName)
+                {
+                    specialtyNames.Add(insurance.InsuranceSpecialtyName);
+                }
+            }
+            return specialtyNames;
+        }
+
+        public string GetSpecialtyUID(string specialtyName)
+        {
+            List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
+            foreach (var insurance in insuranceList)
+            {
+                if (insurance.InsuranceSpecialtyName.Contains(specialtyName))
+                {
+                     return insurance.InsuranceUid;
+                }
+            }
+            return null;
+
+        }
     }
 }
