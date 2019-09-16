@@ -1,0 +1,18 @@
+﻿
+@*@{
+    ViewData["Title"] = "BaseInsurance";
+}
+
+<h1>Base Insurance Search</h1>
+
+@model IEnumerable<TrackDr.Models.SavedInsurance>
+
+@foreach (var insurance in Model)
+{
+    foreach (var name in insurance.InsuranceBaseName)
+    {
+         @Html.ActionLink($"{name}", "ListSpecialtyNames", name)
+
+    }
+}*@
+
