@@ -32,7 +32,11 @@
                 <td>@location.visit_address.state</td>
     }
             @foreach (var specialty in doctor.specialties)
-    {
+            {
+                if(specialty == null)
+                {
+                    System.Threading.Thread.Sleep(300);
+                }
                 <td>@specialty.name</td>
     }
 

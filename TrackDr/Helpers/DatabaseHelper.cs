@@ -107,8 +107,7 @@ namespace TrackDr.Helpers
             //Taking every doctorid, going to api, bringing back that specific doctor and placing it in list
             foreach (string doctor in doctorIdList)
             {
-                Thread.Sleep(300);
-                doctorList.Add(_bDAPIHelper.GetDoctor(doctor).Result);
+                    doctorList.Add(_bDAPIHelper.GetDoctor(doctor).Result);
             }
             return doctorList;
         }
