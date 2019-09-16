@@ -10,6 +10,6 @@ namespace TrackDr.Helpers
         string GetAPIKey();
         string GooglefyUserAddress(string userName);
         string GooglefyString(string toBeGooglefied);
-        void DetermineDistance(string startAddress, string endAddress);
+        Task<string> GetTravelInfo(string startAddress, string endAddress);
     }
 }

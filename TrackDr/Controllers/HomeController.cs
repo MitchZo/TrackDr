@@ -89,7 +89,10 @@ namespace TrackDr.Controllers
             return View("ListDoctors", result);
         }
 
-
+        public void Test()
+        {
+            _gAPIHelper.GetTravelInfo("Vancouver+BC", "San+Francisco");
+        }
         public IActionResult AddDoctor(string doctorUid)
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -102,7 +105,6 @@ namespace TrackDr.Controllers
                 {
                     _dbHelper.AddNewDoctor(newDoctor);
                 }
-
                 newParentDoctor.ParentId = thisUser.Id;
                 newParentDoctor.DoctorId = doctorUid;
 

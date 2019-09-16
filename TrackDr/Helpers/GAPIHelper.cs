@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TrackDr.Models;
 
@@ -55,9 +58,37 @@ namespace TrackDr.Helpers
             }
             return returnString;
         }
-        public void DetermineDistance(string startAddress, string endAddress)
+        public async Task<string> GetTravelInfo(string startAddress, string endAddress)
         {
-
+            string apiKey = GetAPIKey();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://maps.googleapis.com");
+            var response = await client.GetAsync($"maps/api/distancematrix/json?units=imperial&origins={startAddress}&destinations={endAddress}&key={GetAPIKey()}"); 
+            return await response.Content.ReadAsStringAsync();
+        }
+        public List<Row> GetTravelRoutes(string startAddress, string endAddress)
+        {
+            List<Row> travelRoutes = new List<Row>();
+            TravelInfo travelInfo = JsonConvert.DeserializeObject<TravelInfo>(GetTravelInfo(startAddress, endAddress).Result);
+            foreach (Row row in travelInfo.rows)
+            {
+                travelRoutes.Add(row);
+            }
+            return travelRoutes;
+        }
+        public string GetDistanceInMiles(List<Row> travelRoutes)
+        {
+            string distance = "no locations in range";
+            List<Element[]> elements = new List<Element[]>();
+            foreach(Row row in travelRoutes)
+            {
+                elements.Add(row.elements);
+            }
+            foreach(Element[] elementArray in elements)
+            {
+                distance = elementArray[0].distance.text;
+            }
+            return distance;
         }
     }
 }
