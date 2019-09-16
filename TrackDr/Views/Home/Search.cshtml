@@ -9,7 +9,7 @@
 
 <h2>Search for a pediatrician!</h2>
 <form action="/Home/Search" method="post">
-
+    
     <div class="fields">
         <input type="text" name="userInput" placeholder="Specialty (Optional)" />
         <br />
@@ -19,5 +19,6 @@
             @Html.DropDownListFor(m => m.UserState, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State (Optional)", new { @class = "form-control" })
         </div>
     </div>
-    <input type="submit" value="Search!" />
+    <input type="submit" value="Search" />
+
 </form>

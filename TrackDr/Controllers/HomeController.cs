@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,12 +45,6 @@ namespace TrackDr.Controllers
             return View("Search");
         }
 
-        [AllowAnonymous]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -72,19 +67,7 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> Search(string userInput, string userState, string userInsurance)
         {
             Rootobject result;
-            //if (userState != null)
-            //{
-            //    result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
-
-            //}
-            //else if (userInsurance != null)
-            //{
-            //    result = await _bDAPIHelper.GetDoctorListByInsurance(userInput, userState, userInsurance);
-            //}
-            //else
-            //{
-            //    result = await _bDAPIHelper.GetDoctorListByState(userInput, userState);
-            //}
+        
             result = await _bDAPIHelper.GetDoctorList(userInput, userState, userInsurance);
             return View("ListDoctors", result);
         }
@@ -246,6 +229,13 @@ namespace TrackDr.Controllers
 
             return View("Search");
         }
+
+        //// this returns a list of unique insurance base names
+        //public IActionResult BaseInsurance()
+        //{
+        //    var baseNames = _dbHelper.GetAllBaseInsuranceNames();
+        //    return View(baseNames);
+        //}
     }
 }
 
