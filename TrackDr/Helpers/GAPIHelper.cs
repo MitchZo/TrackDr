@@ -24,6 +24,7 @@ namespace TrackDr.Helpers
             //Use this method to get the APIKey
             return _configuration.GetSection("AppConfiguration")["GAPIKeyValue"];
         }
+
         public string GooglefyUserAddress(string userName)
         {
             string returnString = "";
@@ -90,5 +91,6 @@ namespace TrackDr.Helpers
             }
             return distance;
         }
+
     }
 }

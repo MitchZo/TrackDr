@@ -32,7 +32,7 @@ namespace TrackDr.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-           // AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            // AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             if (User.Identity.IsAuthenticated)
             {
                 AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -94,11 +94,42 @@ namespace TrackDr.Controllers
                     _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
 
                 }
-                return RedirectToAction("SavedDoctors"); 
+                return RedirectToAction("SavedDoctors");
             }
             return View("Search");
         }
+        public IActionResult AddChild(string parentId)
+        {
+            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            Child newChild = new Child();
 
+            newChild.ParentId = thisUser.Id;
+
+            _dbHelper.AddNewChild(newChild);
+
+            return View("UserInformation");
+        }
+        //public IActionResult AddChildDoctor(string doctorUid)
+        //{
+        //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+        //    Parent childParent = _dbHelper.GetCurrentParent(thisUser);
+
+        //    ChildDoctor newChildDoctor = new ChildDoctor();
+        //    if (ModelState.IsValid)
+        //    {
+        //        Doctor newDoctor = new Doctor();
+        //        newDoctor.DoctorId = doctorUid;
+        //        if (_dbHelper.CanAddDoctor(newDoctor))
+        //        {
+        //            _dbHelper.AddNewDoctor(newDoctor);
+        //        }
+
+        //        newChildDoctor.ChildId = thisUser.Id;
+        //        newChildDoctor.DoctorId = doctorUid;
+
+
+        //    }
+        //}
         public IActionResult SavedDoctors()
         {
             List<SingleDoctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
@@ -179,7 +210,7 @@ namespace TrackDr.Controllers
             updatedUser.ParentId = user.ParentId;
 
             _dbHelper.UpdateParent(updatedUser);
-            
+
 
             return View("UserInformation", updatedUser);
         }

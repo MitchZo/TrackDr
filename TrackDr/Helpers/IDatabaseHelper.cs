@@ -15,6 +15,7 @@ namespace TrackDr.Helpers
         void AddNewParentDoctorRelationship(ParentDoctor newParentDoctor);
         List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName);
         void AddNewParent(Parent newUser);
+        void AddNewChild(Child newChild);
         Parent FindParentById(string userId);
         void UpdateParent(Parent updatedUser);
         Parent GetCurrentParent(AspNetUsers currentUser);

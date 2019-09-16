@@ -3,17 +3,24 @@
     ViewData["Title"] = "Search";
 }
 
-@model  TrackDr.Models.Search
+@model TrackDr.Models.Search
 
-<h1>Search</h1>
+<h1 style="text-align: center">Welcome to TrackDr!</h1>
+
+<h2>Search for a pediatrician!</h2>
 <form action="/Home/Search" method="post">
-    <input type="text" name="userInput" placeholder="Specialty (optional)" />
-    <div class="select" style="width: 188px;">
-        @Html.DropDownListFor(m => m.UserState, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State (optional)", new { @class = "form-control" })
-    </div>
     
+    <div class="fields">
+        <input type="text" name="userInput" placeholder="Specialty (Optional)" />
+        <br />
+        <input type="text" name="userInsurance" placeholder="Insurance Carrier (Optional)" />
 
+        <div class="select" style="width: 178px;">
+            @Html.DropDownListFor(m => m.UserState, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State (Optional)", new { @class = "form-control" })
+        </div>
+    </div>
     <input type="submit" value="Search" />
+
 
 </form>
 
@@ -21,4 +28,5 @@
     <br />
     <p>Search by Insurance Carrier instead?</p>
     <input type="submit"   name="userInput" value="Browse Insurance Carriers" />
+
 </form>

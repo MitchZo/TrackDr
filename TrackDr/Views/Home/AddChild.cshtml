@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "AddChild";
+}
+
+<h1>Add Child</h1>
+
+@model TrackDr.Models.Child
+
+<form action="/Home/AddChild" method="post">
+    Child's first name: <input type="text" name="FirstName" value="@Model.FirstName" />
+    <input type="hidden" name="ChildId" value="@Model.ChildId" />
+    <input type="submit" name="Add Child" />
+</form>
+
