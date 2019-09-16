@@ -1,18 +1,19 @@
 ﻿
-@*@{
+@{
     ViewData["Title"] = "BaseInsurance";
 }
 
 <h1>Base Insurance Search</h1>
 
-@model IEnumerable<TrackDr.Models.SavedInsurance>
+@model List<string>
+<form action="/Home/SpecialtyInsuranceNames" method="post">
 
-@foreach (var insurance in Model)
-{
-    foreach (var name in insurance.InsuranceBaseName)
+    @foreach (var baseName in Model)
     {
-         @Html.ActionLink($"{name}", "ListSpecialtyNames", name)
-
+        @*<td>@Html.ActionLink(baseName, "SpecialtyInsuranceNames", "Home", "baseName")</td>
+            <br />*@
+        <input type="submit" name="baseName" value="@baseName" />
+        <br />
     }
-}*@
+</form>
 

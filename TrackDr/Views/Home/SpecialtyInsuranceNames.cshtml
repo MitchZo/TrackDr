@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "SpecialtyInsuranceNames";
+}
+
+<h1>Specialty Insurance Names</h1>
+
+@model List<string>
+<form action="/Home/ListDoctorsBasedOnInsurance" method="post">
+
+    @foreach (var specialtyName in Model)
+    {
+        <input type="submit" name="specialtyName" value="@specialtyName" />
+        <br />
+    }
+</form>
