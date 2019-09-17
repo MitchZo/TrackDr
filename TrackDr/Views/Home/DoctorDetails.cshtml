@@ -6,46 +6,49 @@
 @model TrackDr.Models.SingleDoctor
 <h1>Doctor Details</h1>
 
-<table class="table">
+<table class="table table-hover">
     <tr>
         <th>Title:</th>
         <th>Name:</th>
         <th>Gender:</th>
-        <th>State:</th>
-        <th>Specialty:</th>
+        <th>States:</th>
+        <th>Specialties:</th>
         <th>Bio:</th>
+        <th>Languages:</th>
+        <th>Picture:</th>
     </tr>
 
     <tr>
         <td>@Model.data.profile.title</td>
         <td>@Model.data.profile.first_name @Model.data.profile.last_name</td>
         <td>@Model.data.profile.gender</td>
-        @{
-            List<string> stateList = new List<string>();
-            @foreach (var office in Model.data.practices)
-            {
-                if (!stateList.Contains(office.visit_address.state))
+        <td>
+            @{List<string> stateList = new List<string>();
+                @foreach (var office in Model.data.practices)
                 {
-
-                    <td>@office.visit_address.state</td>
-                    stateList.Add(office.visit_address.state);
+                    if (!stateList.Contains(office.visit_address.state))
+                    {
+                        <p>@office.visit_address.state</p>
+                        stateList.Add(office.visit_address.state);
+                    }
                 }
-
             }
-        }
-        @foreach (var specialty in Model.data.specialties)
-        {
-            <td>@specialty.name<br /></td>
-        }
+        </td>
+        <td>
+            @foreach (var specialty in Model.data.specialties)
+            {
+                <p>@specialty.name</p>
+            }
+        </td>
         <td>@Model.data.profile.bio</td>
-       
 
-        @foreach (var language in Model.data.profile.languages)
-        {
-            <td>@language.name</td>
-        }
+        <td>
+            @foreach (var language in Model.data.profile.languages)
+            {
+                <p>@language.name</p>
+            }
+        </td>
+
         <td><img src="@Model.data.profile.image_url" alt="Photo" /> </td>
-
     </tr>
-
 </table>
