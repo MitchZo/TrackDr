@@ -42,8 +42,9 @@
                     <p>@specialty.name</p>
                 }
             </td>
-
-    <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid }, new { firstName})</td>
-</tr>
+            @{string doctorUid = doctor.uid;}
+            @{string firstName = doctor.profile.first_name;}
+            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid }, new { firstName })</td>
+        </tr>
     }
 </table>

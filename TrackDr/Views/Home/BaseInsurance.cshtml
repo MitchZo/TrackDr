@@ -3,15 +3,17 @@
     ViewData["Title"] = "BaseInsurance";
 }
 
-<h1>Base Insurance Search</h1>
+<h1>Base Insurance Plan Search</h1>
 
 @model List<string>
 <form action="/Home/SpecialtyInsuranceNames" method="post">
 
     @foreach (var baseName in Model)
     {
+    <div class="insuranceButtons">
         <input type="submit" name="baseName" value="@baseName" />
         <br />
+    </div>
     }
 </form>
 

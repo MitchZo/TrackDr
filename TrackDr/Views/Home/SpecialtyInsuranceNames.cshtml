@@ -10,7 +10,9 @@
 
     @foreach (var specialtyName in Model)
     {
-        <input type="submit" name="specialtyName" value="@specialtyName" />
-        <br />
+        <div class="insuranceButtons">
+            <input type="submit" name="specialtyName" value="@specialtyName" />
+            <br />
+        </div>
     }
 </form>

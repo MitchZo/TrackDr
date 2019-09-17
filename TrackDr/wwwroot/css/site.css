@@ -91,3 +91,15 @@ input[type=submit]{
     text-align:center;
     font-weight: bold;
 }
+
+.insuranceButtons {
+    background-color: lawngreen;
+    border: none;
+    color: black;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    width: 485px;
+}
