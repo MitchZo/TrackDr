@@ -43,9 +43,7 @@
                 }
             </td>
 
-            @{string doctorUid = doctor.uid; }
-
-            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
-        </tr>
+    <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid }, new { firstName})</td>
+</tr>
     }
 </table>

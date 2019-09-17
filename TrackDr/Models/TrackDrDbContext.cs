@@ -34,7 +34,9 @@ namespace TrackDr.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
+
+                optionsBuilder.UseSqlServer("DefaultConnection");
+
             }
         }
 
@@ -188,15 +190,17 @@ namespace TrackDr.Models
 
                 entity.Property(e => e.Email).HasMaxLength(128);
 
-                entity.Property(e => e.HouseNumber).HasMaxLength(16);
-
-                entity.Property(e => e.InsuranceBaseName).HasMaxLength(64);
+                entity.Property(e => e.HouseNumber)
+                    .IsRequired()
+                    .HasMaxLength(16);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(11);
 
                 entity.Property(e => e.State).HasMaxLength(32);
 
-                entity.Property(e => e.Street).HasMaxLength(64);
+                entity.Property(e => e.Street)
+                    .IsRequired()
+                    .HasMaxLength(64);
 
                 entity.Property(e => e.Street2).HasMaxLength(64);
 
@@ -223,7 +227,11 @@ namespace TrackDr.Models
             modelBuilder.Entity<SavedInsurance>(entity =>
             {
                 entity.HasKey(e => e.InsuranceUid)
-                    .HasName("PK__Insuranc__E770AC3D62E32930");
+
+                    //.HasName("PK__Insuranc__E770AC3D62E32930");
+
+                    .HasName("PK__Insuranc__E770AC3DDC00211E");
+
 
                 entity.Property(e => e.InsuranceUid)
                     .HasColumnName("InsuranceUID")

@@ -41,12 +41,14 @@
             }
         </td>
         <td>@Model.data.profile.bio</td>
+
         <td>
             @foreach (var language in Model.data.profile.languages)
             {
                 <p>@language.name</p>
             }
         </td>
+
         <td><img src="@Model.data.profile.image_url" alt="Photo" /> </td>
     </tr>
 </table>
