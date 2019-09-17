@@ -228,19 +228,21 @@ namespace TrackDr.Controllers
             return View("Search");
         }
 
-        //// this returns a list of unique insurance base names
+        [AllowAnonymous]
+        // this returns a list of unique insurance base names
         public IActionResult BaseInsurance()
         {
             var insuranceBaseName = _dbHelper.GetAllBaseInsuranceNames();
             return View(insuranceBaseName);
         }
-        
+        [AllowAnonymous]
         public IActionResult SpecialtyInsuranceNames(string baseName)
         {
             var insuranceSpecialtyName = _dbHelper.GetAllSpecialtyInsuranceNames(baseName);
             return View(insuranceSpecialtyName);
 
         }
+
 
         // this gets a UId based on the specialty insurance the user entered
         //public string SpecialtyUIDFinder(string specialtyName)
@@ -249,6 +251,10 @@ namespace TrackDr.Controllers
         //    return userInsurance;
 
         //}
+
+
+        [AllowAnonymous]
+        // this returns a list of doctors based on the user's insurance choice
 
         public async Task<IActionResult> ListDoctorsBasedOnInsurance( string specialtyName)
         {
