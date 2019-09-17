@@ -17,6 +17,7 @@ namespace TrackDr.Models
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
     }
 
+
     public class Rootobject
     {
         public Meta meta { get; set; }
@@ -188,4 +189,5 @@ namespace TrackDr.Models
         public string number { get; set; }
         public string end_date { get; set; }
     }
+
 }

@@ -15,6 +15,7 @@ namespace TrackDr.Models
             ParentDoctor = new HashSet<ParentDoctor>();
         }
 
+
         public enum StateAbbreviations
         {
             AL, AK, AZ, AR, CA, CO, CT, DE, FL, GA, HI, ID,
@@ -25,6 +26,7 @@ namespace TrackDr.Models
         }
 
         
+
 
         public string ParentId { get; set; }
         public string PhoneNumber { get; set; }

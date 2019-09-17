@@ -2,17 +2,17 @@
     ViewData["Title"] = "ListDoctor";
 }
 
-<h1>List Doctor</h1>
+<h1>Your Results:</h1>
 
 @model TrackDr.Models.Rootobject
 
-<table class="table">
-    <tr>
+<table class="table" style="table-layout:fixed; column-count: 5; column-width: 30px;">
+    <tr style="width: 30px;">
         <th>Title:</th>
         <th>Name:</th>
         <th>State:</th>
-        <th></th>
-        <th></th>
+        <th>Specialties:</th>
+        <th>Save:</th>
     </tr>
 
     @foreach (var doctor in Model.data)
@@ -20,27 +20,30 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-            @{List<string> stateList = new List<string>();
-                @foreach (var office in doctor.practices)
-                {
-                    if (!stateList.Contains(office.visit_address.state))
-                    {
 
-                        <td>@office.visit_address.state</td>
-                        stateList.Add(office.visit_address.state);
+            <td>
+                @{List<string> stateList = new List<string>();
+                    @foreach (var office in doctor.practices)
+                    {
+                        if (!stateList.Contains(office.visit_address.state))
+                        {
+                            <p>@office.visit_address.state</p>
+                            stateList.Add(office.visit_address.state);
+                        }
                     }
                 }
-            }
-            @foreach (var specialty in doctor.specialties)
-            {
-                if (specialty == null)
+            </td>
+            <td>
+                @foreach (var specialty in doctor.specialties)
                 {
-                    System.Threading.Thread.Sleep(300);
+                    if (specialty == null)
+                    {
+                        System.Threading.Thread.Sleep(300);
+                    }
+                    <p>@specialty.name</p>
                 }
-                <td>@specialty.name</td>
-            }
+            </td>
 
-            @{string doctorUid = doctor.uid; }
 
             <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
         </tr>
