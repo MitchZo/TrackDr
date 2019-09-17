@@ -1,10 +1,12 @@
-﻿@{
-    ViewData["Title"] = "ListDoctor";
+﻿
+@{
+    ViewData["Title"] = "ListDoctorsBasedOnInsurance";
 }
 
-<h1>List Doctor</h1>
+<h1>List Doctors Based On Insurance</h1>
 
 @model TrackDr.Models.Rootobject
+
 
 <table class="table">
     <tr>
@@ -13,6 +15,7 @@
         <th>State:</th>
         <th></th>
         <th></th>
+
     </tr>
 
     @foreach (var doctor in Model.data)
@@ -20,7 +23,8 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-            @{List<string> stateList = new List<string>();
+            @{
+                List<string> stateList = new List<string>();
                 @foreach (var office in doctor.practices)
                 {
                     if (!stateList.Contains(office.visit_address.state))
@@ -29,6 +33,7 @@
                         <td>@office.visit_address.state</td>
                         stateList.Add(office.visit_address.state);
                     }
+
                 }
             }
             @foreach (var specialty in doctor.specialties)
@@ -40,9 +45,17 @@
                 <td>@specialty.name</td>
             }
 
+            @*@if (User.Identity.IsAuthenticated)
+                {*@
+            <form action="/Home/AddDoctor" method="post">
+                @*string doctorId = doctor.uid;*@
+                @*<td> <input type="submit" name="" value="Add" /> </td>*@
+            </form>
             @{string doctorUid = doctor.uid; }
 
             <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
+            @*}*@
+
         </tr>
     }
 </table>

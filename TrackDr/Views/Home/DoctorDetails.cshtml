@@ -38,7 +38,10 @@
             <td>@specialty.name<br /></td>
         }
         <td>@Model.data.profile.bio</td>
-       
+        @foreach (var rating in Model.data.ratings)
+        {
+            <td>@rating.image_url_small_2x</td>
+        }
 
         @foreach (var language in Model.data.profile.languages)
         {

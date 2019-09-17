@@ -10,6 +10,8 @@
 
     @foreach (var baseName in Model)
     {
+        @*<td>@Html.ActionLink(baseName, "SpecialtyInsuranceNames", "Home", "baseName")</td>
+            <br />*@
         <input type="submit" name="baseName" value="@baseName" />
         <br />
     }

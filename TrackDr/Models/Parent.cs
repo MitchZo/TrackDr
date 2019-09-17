@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using TrackDr.Helpers;
 
 namespace TrackDr.Models
 {
+
     public partial class Parent
     {
+
+        private readonly IBDAPIHelper _bDAPIHelper;
         public Parent()
         {
             Child = new HashSet<Child>();
@@ -20,6 +24,7 @@ namespace TrackDr.Models
             WI, WY
         }
 
+        
 
         public string ParentId { get; set; }
         public string PhoneNumber { get; set; }
