@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TrackDr.Models
 {
-    public class SavedInsurance
+    public partial class SavedInsurance
     {
         public string InsuranceBaseName { get; set; }
         public string InsuranceSpecialtyName { get; set; }

@@ -9,14 +9,14 @@
 
 <table class="table">
     <tr>
+        <th>Title:</th>
         <th>Name:</th>
-        <th>More Details:</th>
-        <th>Delete:</th>
+        @*<th>Specialty:</th>*@
     </tr>
 
     @foreach (var doctor in Model)
     {
-
+             System.Threading.Thread.Sleep(500);
         <tr>
             <td>@doctor.FirstName</td>
 
