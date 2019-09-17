@@ -13,7 +13,7 @@ namespace TrackDr.Helpers
         AspNetUsers GetCurrentUser(string userName);
         void AddNewDoctor(Doctor newDoctor);
         void AddNewParentDoctorRelationship(ParentDoctor newParentDoctor);
-        List<Doctor> GetListOfCurrentUsersDoctors(string userName);
+        List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName);
         void AddNewParent(Parent newUser);
         void AddNewChild(Child newChild);
         Parent FindParentById(string userId);
