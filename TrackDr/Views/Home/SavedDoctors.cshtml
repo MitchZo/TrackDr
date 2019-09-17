@@ -3,24 +3,24 @@
     ViewData["Title"] = "SavedDoctors";
 }
 
-@model IEnumerable<TrackDr.Models.SingleDoctor>
+@model IEnumerable<TrackDr.Models.Doctor>
 
 <h1>Saved Doctors</h1>
 
 <table class="table">
     <tr>
+        <th>Title:</th>
         <th>Name:</th>
-        <th>More Details:</th>
-        <th>Delete:</th>
+        @*<th>Specialty:</th>*@
     </tr>
 
     @foreach (var doctor in Model)
     {
-             System.Threading.Thread.Sleep(300);
+             System.Threading.Thread.Sleep(500);
         <tr>
-            <td>@doctor.data.profile.first_name</td>
+            <td>@doctor.FirstName</td>
 
-            @{string doctorId = doctor.data.uid;}
+            @{string doctorId = doctor.DoctorId;}
             <td>@Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" })</td>
             <td>@Html.ActionLink("Delete", "DeleteDoctor", new { doctorId })</td>
         </tr>

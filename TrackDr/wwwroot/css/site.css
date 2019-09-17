@@ -69,16 +69,6 @@ body {
     background-color: lawngreen;
 }
 
-.table{
-    opacity: 0.8;
-    font-weight: bolder
-}
-.table, th, td{
-    text-align: left;
-}
-.table tbody tr:hover td, .table tbody tr:hover th{
-    background-color: lawngreen;
-}
 
 input[type=submit]{
     background-color: lawngreen;
@@ -103,3 +93,4 @@ input[type=submit]{
     font-weight: bold;
     width: 485px;
 }
+
