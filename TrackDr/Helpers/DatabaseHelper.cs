@@ -80,7 +80,7 @@ namespace TrackDr.Helpers
         // this method adds a new doctor to the Doctor database
         public void AddNewDoctor(Doctor newDoctor)
         {
-            //Thread.Sleep(300);
+            
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
             // TODO make this workkk!! throwing a null exception when the user tries to add a doctor
