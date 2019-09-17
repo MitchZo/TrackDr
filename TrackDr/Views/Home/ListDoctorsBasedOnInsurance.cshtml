@@ -1,18 +1,22 @@
-﻿@{
-    ViewData["Title"] = "ListDoctor";
+
+@{
+    ViewData["Title"] = "ListDoctorsBasedOnInsurance";
 }
 
-<h1>Your Results:</h1>
+
+<h1>List Of Doctors Based On Insurance:</h1>
 
 @model TrackDr.Models.Rootobject
 
-<table class="table" style="table-layout:fixed; column-count: 5; column-width: 30px;">
-    <tr style="width: 30px;">
+<table class="table">
+    <tr>
         <th>Title:</th>
         <th>Name:</th>
-        <th>State:</th>
-        <th>Specialties:</th>
+
+        <th>States:</th>
+        <th>Specialties</th>
         <th>Save:</th>
+
     </tr>
 
     @foreach (var doctor in Model.data)
@@ -20,7 +24,6 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-
 
             <td>
                 @{List<string> stateList = new List<string>();
@@ -36,24 +39,17 @@
             </td>
             <td>
                 @foreach (var specialty in doctor.specialties)
-
                 {
                     if (specialty == null)
                     {
                         System.Threading.Thread.Sleep(300);
                     }
-
                     <p>@specialty.name</p>
-                }*@
-            <td>@doctor.specialties[0].name</td>
-
-            <td>
-                <form action="/Home/AddDoctor" method="post">
-                    <input type="hidden" name="DoctorId" value="@doctor.uid" />
-                    <input type="hidden" name="FirstName" value="@doctor.profile.first_name" />
-                    <input type="submit" value="Add" />
-                </form>
+                }
             </td>
+            @{string doctorUid = doctor.uid; }
+
+            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
 
         </tr>
     }

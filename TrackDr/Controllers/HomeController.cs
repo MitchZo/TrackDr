@@ -29,9 +29,6 @@ namespace TrackDr.Controllers
             _bDAPIHelper = bDAPIHelper;
         }
 
-        // this method checks to see if a user is registered based on the ParentId as well as the ASP Id
-        // if the user does not exist in the database, they are redirected to a registration page after they register with ASP
-        // if they are already registerd with the database, they will be redirected to the search/home page
         [AllowAnonymous]
         public IActionResult Index()
         {
@@ -52,8 +49,6 @@ namespace TrackDr.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        // this method is the view for the list doctor
         [AllowAnonymous]
         public IActionResult ListDoctor()
         {
@@ -66,19 +61,15 @@ namespace TrackDr.Controllers
             return View();
         }
 
-        // this method sends the user's input to the API search method 
-        // and returns a list of doctors that corrlate with the information the user entered
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Search(string userInput, string userState)
+        public async Task<IActionResult> Search(string userInput, string userState, string userInsurance)
         {
             Rootobject result;
-            result = await _bDAPIHelper.GetDoctorList(userInput, userState);
+            result = await _bDAPIHelper.GetDoctorList(userInput, userState, userInsurance);
             return View("ListDoctors", result);
         }
 
-
-        // TODO DELETE THIS TEST METHOD
         public void Test()
         {
             _gAPIHelper.GetTravelInfo("Vancouver+BC", "San+Francisco");
@@ -90,7 +81,6 @@ namespace TrackDr.Controllers
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             ParentDoctor newParentDoctor = new ParentDoctor();
-
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
@@ -112,8 +102,6 @@ namespace TrackDr.Controllers
             }
             return View("Search");
         }
-
-        // this method adds a child
         public IActionResult AddChild(string parentId)
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -146,23 +134,18 @@ namespace TrackDr.Controllers
 
         //    }
         //}
-
-            // this method returns a list of saved doctors by the user based on the user's ASP Id
         public IActionResult SavedDoctors()
         {
-            List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
+            List<SingleDoctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
 
             return View(doctorList);
         }
 
-        // this method returns extra details on a doctor chosen by the user
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
             return View(doctor);
         }
-
-        // this method deletes a doctor based on the doctor's UID
         public IActionResult DeleteDoctor(string doctorId)
         {
             var userDelete = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -170,6 +153,10 @@ namespace TrackDr.Controllers
             _dbHelper.DeleteDoctor(foundDoctor);
             return RedirectToAction("SavedDoctors");
         }
+
+
+
+
         //saves the user's address to the UserDb as well as the user's Id number and their ASP Id
         [HttpPost]
         public IActionResult RegisterUser(Parent newUserInfo)
@@ -198,8 +185,6 @@ namespace TrackDr.Controllers
             return View();
         }
 
-        // this method shows the user's information based on their ASP Id
-        // if the user is not found, the user will be redirected to the search page
         public IActionResult UserInformation()
         {
             Parent foundParent = _dbHelper.FindParentById(_dbHelper.GetCurrentUser(User.Identity.Name).Id);
@@ -210,8 +195,7 @@ namespace TrackDr.Controllers
             return View("Search");
         }
 
-        // this method allows the user to edit their information 
-        // which will then be saved to the database
+
         [HttpPost]
         public IActionResult EditUserInformation(Parent user)
         {
@@ -235,7 +219,6 @@ namespace TrackDr.Controllers
             return View("UserInformation", updatedUser);
         }
 
-        // this method redirects the user to the edit user information page if that user exists in the database
         [HttpGet]
         public IActionResult EditUserInformation(string ParentId)
         {
@@ -248,6 +231,7 @@ namespace TrackDr.Controllers
 
             return View("Search");
         }
+
         [AllowAnonymous]
         // this returns a list of unique insurance base names
         public IActionResult BaseInsurance()
@@ -262,15 +246,42 @@ namespace TrackDr.Controllers
             return View(insuranceSpecialtyName);
 
         }
+
+
+        // this gets a UId based on the specialty insurance the user entered
+        //public string SpecialtyUIDFinder(string specialtyName)
+        //{
+        //    var userInsurance = _dbHelper.GetSpecialtyUID(specialtyName); 
+        //    return userInsurance;
+
+        //}
+
+
         [AllowAnonymous]
         // this returns a list of doctors based on the user's insurance choice
+
         public async Task<IActionResult> ListDoctorsBasedOnInsurance( string specialtyName)
         {
             string uid = _dbHelper.GetSpecialtyUID(specialtyName);
             Rootobject result;
             result = await _bDAPIHelper.GetDoctorsBaseOnInsurance(uid);
-            return View("ListDoctors", result);
+            return View("ListDoctorsBasedOnInsurance", result);
         }
 
+        public void ListChoice(bool userInput)
+        {
+            if (userInput)
+            {
+                BaseInsurance();
+            }
+            else
+            {
+                Search();
+            }
+        }
     }
 }
+
+// when the user adds in a new docto we will save the iod the first na,e and the last name
+//when we display  that information to the saved deoctors list we can display the first and laset name from the database
+//and when we click display extra information we ping to the api to get that additional information 
