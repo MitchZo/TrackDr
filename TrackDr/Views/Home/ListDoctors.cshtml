@@ -21,6 +21,7 @@
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
 
+
             <td>
                 @{List<string> stateList = new List<string>();
                     @foreach (var office in doctor.practices)
@@ -35,17 +36,25 @@
             </td>
             <td>
                 @foreach (var specialty in doctor.specialties)
+
                 {
                     if (specialty == null)
                     {
                         System.Threading.Thread.Sleep(300);
                     }
+
                     <p>@specialty.name</p>
-                }
+                }*@
+            <td>@doctor.specialties[0].name</td>
+
+            <td>
+                <form action="/Home/AddDoctor" method="post">
+                    <input type="hidden" name="DoctorId" value="@doctor.uid" />
+                    <input type="hidden" name="FirstName" value="@doctor.profile.first_name" />
+                    <input type="submit" value="Add" />
+                </form>
             </td>
 
-
-            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
         </tr>
     }
 </table>

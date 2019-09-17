@@ -74,20 +74,24 @@ namespace TrackDr.Controllers
         {
             _gAPIHelper.GetTravelInfo("Vancouver+BC", "San+Francisco");
         }
-        public IActionResult AddDoctor(string doctorUid)
+
+        // this method adds a doctor to the database if they have not been added before
+        // the doctor's UID as well as their first name is stored
+        public IActionResult AddDoctor(Doctor doctor) 
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             ParentDoctor newParentDoctor = new ParentDoctor();
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
-                newDoctor.DoctorId = doctorUid;
+                newDoctor.DoctorId = doctor.DoctorId;
+                newDoctor.FirstName = doctor.FirstName;
                 if (_dbHelper.CanAddDoctor(newDoctor))
                 {
                     _dbHelper.AddNewDoctor(newDoctor);
                 }
                 newParentDoctor.ParentId = thisUser.Id;
-                newParentDoctor.DoctorId = doctorUid;
+                newParentDoctor.DoctorId = doctor.DoctorId;
 
                 if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, newDoctor.DoctorId))
                 {

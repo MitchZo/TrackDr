@@ -70,7 +70,7 @@ namespace TrackDr.Helpers
         }
         public void AddNewDoctor(Doctor newDoctor)
         {
-            Thread.Sleep(300);
+            //Thread.Sleep(300);
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
         }
