@@ -18,6 +18,8 @@ namespace TrackDr.Helpers
             _context = context;
             _bDAPIHelper = bDAPIHelper;
         }
+
+        // this method checks to see if a new doctor can be added to the database
         public bool CanAddDoctor(Doctor doctor)
         {
             Doctor foundDoctor = FindDoctorById(doctor.DoctorId);
@@ -30,6 +32,8 @@ namespace TrackDr.Helpers
                 return false;
             }
         }
+
+        // this method checks to see if a new parent-doctor relationship can be added
         public bool CanAddParentDoctorRelationship(string parent, string doctor)
         {
             bool isValid = false;
@@ -60,66 +64,101 @@ namespace TrackDr.Helpers
             }
             return isValid;
         }
+
+        // this method gets the current user based on ASP registration information
         public AspNetUsers GetCurrentUser(string userName)
         {
                 return _context.AspNetUsers.Where(u => u.Email == userName).First();
         }
+
+        // this method gets the current user based on the current user's ParentId and the current ASP Id
         public Parent GetCurrentParent(AspNetUsers currentUser)
         {
             return _context.Parent.Find(currentUser.Id);
         }
+
+        // this method adds a new doctor to the Doctor database
         public void AddNewDoctor(Doctor newDoctor)
         {
-            
+            //Thread.Sleep(300);
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
+            // TODO make this workkk!! throwing a null exception when the user tries to add a doctor
         }
+
+        // this method adds a new parent doctor relationship if it hasnt been added yet
         public void AddNewParentDoctorRelationship(ParentDoctor newParentDoctor)
         {
             _context.ParentDoctor.Add(newParentDoctor);
             _context.SaveChanges();
         }
+
+        // this method adds a new parent to the database
         public void AddNewParent(Parent newUser)
         {
             _context.Parent.Add(newUser);
             _context.SaveChanges();
         }
+        // this method adds a new child to the database 
         public void AddNewChild(Child newChild)
         {
             _context.Child.Add(newChild);
             _context.SaveChanges();
         }
-        public List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName)
+
+        // this method will get a list of all the user's saved doctors
+        //public List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName)
+        //{
+        //    List<SingleDoctor> doctorList = new List<SingleDoctor>();
+        //    var doctorIdList = GetSavedDoctors(userName);
+        //    foreach (string doctor in doctorIdList)
+        //    {
+        //            doctorList.Add(_bDAPIHelper.GetDoctor(doctor).Result);
+        //    }
+        //    return doctorList;
+        //}
+
+        // this puts doctor's UIDs in a list based on the user's ID
+        // ie.  puts the UID's of doctors affiliated with the user into a list
+        // this will return a list of strings that hold the doctor's UIDs 
+        public List<Doctor> GetListOfCurrentUsersDoctors(string userName)
         {
             AspNetUsers thisUser = GetCurrentUser(userName);
-            //Goes to Db, pull list of doctors associated with current user
-            List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
-            //Establishes new list to store doctor UID's
-            List<string> doctorIdList = new List<string>();
-            //List of list of "Doctors", Rootobject >>> Datum[]
-            List<SingleDoctor> doctorList = new List<SingleDoctor>();
+            List<Doctor> doctorIdList = new List<Doctor>();
 
-            //Taking all doctorIDs from parentdoctor relationship, adding them to DoctorId list
+            var doctor = new Doctor();
+            List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
             foreach (ParentDoctor relationship in savedList)
             {
-                doctorIdList.Add(relationship.DoctorId);
+                if (relationship.ParentId == thisUser.Id)
+                {
+                    doctor = GetDoctorFromDatabase(relationship.DoctorId);
+                    doctorIdList.Add(doctor);
+                   
+                }
             }
-
-            //Taking every doctorid, going to api, bringing back that specific doctor and placing it in list
-            foreach (string doctor in doctorIdList)
-            {
-                    doctorList.Add(_bDAPIHelper.GetDoctor(doctor).Result);
-            }
-            return doctorList;
+            return doctorIdList;
         }
+
+        // this method gets a doctor from the databse based on the doctor's UID
+        public Doctor GetDoctorFromDatabase(string doctorUID)
+        {
+            return _context.Doctor.Find(doctorUID);
+        }
+
+        // this method finds the parent in the database that is the same as the ASP user's Id
         public Parent FindParentById(string userId)
         {
             return _context.Parent.Find(userId);
         }
+
+        // this finds a doctor in the database based on their Id
         public Doctor FindDoctorById(string doctorId)
         {
            return _context.Doctor.Find(doctorId);
         }
+
+        // this updates the parent based on any edits the user has made to items such as their state
         public void UpdateParent(Parent updatedUser)
         {
             _context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -127,12 +166,14 @@ namespace TrackDr.Helpers
             _context.SaveChanges();
         }
 
+        // this method deletes a doctor
         public void DeleteDoctor(ParentDoctor parentDoctor)
         {
             _context.ParentDoctor.Remove(parentDoctor);
             _context.SaveChanges();
         }
 
+        // tthis method finds a doctor-parent relationship based on the ASP user's Id and the doctor's UID
         public ParentDoctor FindParentDoctorRelationship(string doctorId, AspNetUsers currentUser)
         {
             List<ParentDoctor> parentDoctorRelationship = _context.ParentDoctor.ToList();
@@ -145,10 +186,11 @@ namespace TrackDr.Helpers
                     return relationship;
                     }
                 }
-            }
+            }// TODO THIS IS THROWING AN EXCEPTION"System.ArgumentException: 'The key value at position 0 of the call to 'DbSet<ParentDoctor>.Find' was of type 'string', which does not match the property type of 'int'.'"
             return _context.ParentDoctor.Find(doctorId);
         }
 
+        // this method returns a list of all base insurance names, without repeats
         public List<string> GetAllBaseInsuranceNames()
         {
             List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
@@ -167,9 +209,7 @@ namespace TrackDr.Helpers
             return insuranceBaseNameList;
         }
 
-        //this will look through the insurance database and find the specialty insurance types
-        //that correspond to the base insurance name the user choses
-        //it will return a list of strings 
+        // this method returns a list of specialty insurances based on which base name was chosen by the user
         public List<string> GetAllSpecialtyInsuranceNames(string baseName)
         {
             List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
@@ -184,6 +224,7 @@ namespace TrackDr.Helpers
             return specialtyNames;
         }
 
+        // this method returns the specialty insurance UID based on which specialty insurance the user chose
         public string GetSpecialtyUID(string specialtyName)
         {
             List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();

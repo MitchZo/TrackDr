@@ -69,25 +69,4 @@ body {
     background-color: lawngreen;
 }
 
-.table{
-    opacity: 0.8;
-    font-weight: bolder
-}
-.table, th, td{
-    text-align: left;
-}
-.table tbody tr:hover td, .table tbody tr:hover th{
-    background-color: lawngreen;
-}
 
-input[type=submit]{
-    background-color: lawngreen;
-    border: none;
-    color: black;
-    padding: 6px 10px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-    text-align:center;
-    font-weight: bold;
-}
