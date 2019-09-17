@@ -86,7 +86,7 @@ namespace TrackDr.Controllers
 
         // this method adds a doctor to the database if they have not been added before
         // the doctor's UID as well as their first name is stored
-        public IActionResult AddDoctor(string doctorUid, string firstName)
+        public IActionResult AddDoctor(Doctor doctor) 
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             ParentDoctor newParentDoctor = new ParentDoctor();
@@ -94,14 +94,14 @@ namespace TrackDr.Controllers
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
-                newDoctor.DoctorId = doctorUid;
-                newDoctor.FirstName = firstName;
+                newDoctor.DoctorId = doctor.DoctorId;
+                newDoctor.FirstName = doctor.FirstName;
                 if (_dbHelper.CanAddDoctor(newDoctor))
                 {
                     _dbHelper.AddNewDoctor(newDoctor);
                 }
                 newParentDoctor.ParentId = thisUser.Id;
-                newParentDoctor.DoctorId = doctorUid;
+                newParentDoctor.DoctorId = doctor.DoctorId;
 
                 if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, newDoctor.DoctorId))
                 {
