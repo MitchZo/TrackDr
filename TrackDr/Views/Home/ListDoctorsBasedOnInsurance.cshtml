@@ -1,8 +1,7 @@
-
+﻿
 @{
     ViewData["Title"] = "ListDoctorsBasedOnInsurance";
 }
-
 
 <h1>List Of Doctors Based On Insurance:</h1>
 
@@ -12,11 +11,9 @@
     <tr>
         <th>Title:</th>
         <th>Name:</th>
-
         <th>States:</th>
         <th>Specialties</th>
         <th>Save:</th>
-
     </tr>
 
     @foreach (var doctor in Model.data)
@@ -24,7 +21,6 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-
             <td>
                 @{List<string> stateList = new List<string>();
                     @foreach (var office in doctor.practices)
@@ -50,7 +46,6 @@
             @{string doctorUid = doctor.uid; }
 
             <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid })</td>
-
         </tr>
     }
 </table>
