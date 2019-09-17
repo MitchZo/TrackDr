@@ -34,9 +34,7 @@ namespace TrackDr.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TrackDrDb;Trusted_Connection=True;");
-
             }
         }
 
@@ -178,23 +176,8 @@ namespace TrackDr.Models
             modelBuilder.Entity<Doctor>(entity =>
             {
                 entity.Property(e => e.DoctorId).ValueGeneratedNever();
-            });
 
-            modelBuilder.Entity<SavedInsurance>(entity =>
-            {
-                entity.HasKey(e => e.InsuranceUid)
-                    .HasName("PK__Insuranc__E770AC3DDC00211E");
-
-                entity.Property(e => e.InsuranceUid)
-                    .HasColumnName("InsuranceUID")
-                    .HasMaxLength(128)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.InsuranceBaseName)
-                    .IsRequired()
-                    .HasMaxLength(64);
-
-                entity.Property(e => e.InsuranceSpecialtyName).HasMaxLength(128);
+                entity.Property(e => e.FirstName).HasMaxLength(64);
             });
 
             modelBuilder.Entity<Parent>(entity =>
@@ -207,9 +190,9 @@ namespace TrackDr.Models
 
                 entity.Property(e => e.Email).HasMaxLength(128);
 
-                entity.Property(e => e.HouseNumber).HasMaxLength(16);
-
-                entity.Property(e => e.InsuranceBaseName).HasMaxLength(64);
+                entity.Property(e => e.HouseNumber)
+                    .IsRequired()
+                    .HasMaxLength(16);
 
                 entity.Property(e => e.InsuranceBaseName).HasMaxLength(64);
 
@@ -219,7 +202,9 @@ namespace TrackDr.Models
                     .IsRequired()
                     .HasMaxLength(32);
 
-                entity.Property(e => e.Street).HasMaxLength(64);
+                entity.Property(e => e.Street)
+                    .IsRequired()
+                    .HasMaxLength(64);
 
                 entity.Property(e => e.Street2).HasMaxLength(64);
 
@@ -248,7 +233,7 @@ namespace TrackDr.Models
             modelBuilder.Entity<SavedInsurance>(entity =>
             {
                 entity.HasKey(e => e.InsuranceUid)
-                    .HasName("PK__Insuranc__E770AC3DBA24CC1B");
+                    .HasName("PK__Insuranc__E770AC3DDC00211E");
 
                 entity.Property(e => e.InsuranceUid)
                     .HasColumnName("InsuranceUID")
