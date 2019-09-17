@@ -2,17 +2,17 @@
     ViewData["Title"] = "ListDoctor";
 }
 
-<h1>Your Results:</h1>
+<h1>List Doctor</h1>
 
 @model TrackDr.Models.Rootobject
 
-<table class="table" style="table-layout:fixed; column-count: 5; column-width: 30px;">
-    <tr style="width: 30px;">
+<table class="table">
+    <tr>
         <th>Title:</th>
         <th>Name:</th>
         <th>State:</th>
-        <th>Specialties:</th>
-        <th>Save:</th>
+        <th></th>
+        <th></th>
     </tr>
 
     @foreach (var doctor in Model.data)
@@ -20,31 +20,34 @@
         <tr>
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
-            <td>
-                @{List<string> stateList = new List<string>();
-                    @foreach (var office in doctor.practices)
+            @{List<string> stateList = new List<string>();
+                @foreach (var office in doctor.practices)
+                {
+                    if (!stateList.Contains(office.visit_address.state))
                     {
-                        if (!stateList.Contains(office.visit_address.state))
-                        {
-                            <p>@office.visit_address.state</p>
-                            stateList.Add(office.visit_address.state);
-                        }
+
+                        <td>@office.visit_address.state</td>
+                        stateList.Add(office.visit_address.state);
                     }
                 }
-            </td>
-            <td>
-                @foreach (var specialty in doctor.specialties)
+            }
+            @*@foreach (var specialty in doctor.specialties)
                 {
                     if (specialty == null)
                     {
                         System.Threading.Thread.Sleep(300);
                     }
-                    <p>@specialty.name</p>
-                }
+                    <td>@specialty.name</td>
+                }*@
+            <td>@doctor.specialties[0].name</td>
+
+            <td>
+                <form action="/Home/AddDoctor" method="post">
+                    <input type="hidden" name="DoctorId" value="@doctor.uid" />
+                    <input type="hidden" name="FirstName" value="@doctor.profile.first_name" />
+                    <input type="submit" value="Add" />
+                </form>
             </td>
-            @{string doctorUid = doctor.uid;}
-            @{string firstName = doctor.profile.first_name;}
-            <td>@Html.ActionLink("Add", "AddDoctor", new { doctorUid }, new { firstName })</td>
         </tr>
     }
 </table>
