@@ -1,32 +1,38 @@
 ﻿@{
-    ViewData["Title"] = "Saved Doctors";
+
+    ViewData["Title"] = "MyDoctors";
 }
 
 @model IEnumerable<TrackDr.Models.Doctor>
 
-<h1>Saved Doctors</h1>
+<h1>My Doctors</h1>
 
-@{ if (Model.Count() > 0)
-    {
-        <table class="table">
+
+@if (Model.Count() == 0 )
+{
+    <h5>You don't currently have any doctors saved!</h5>
+    <h5>Add a doctor to your list @Html.ActionLink("here", "Search")</h5>
+}
+
+@if (Model.Count() != 0)
+{
+    <table class="table">
+        <tr>
+            <th>Title:</th>
+            <th>Name:</th>
+            @*<th>Specialty:</th>*@
+        </tr>
+
+        @foreach (var doctor in Model)
+        {
             <tr>
-                <th>Name:</th>
-                <th>Details:</th>
-                <th>Remove:</th>
-            </tr>
-
-            @foreach (var doctor in Model)
-            {
-                <tr>
-                <td> @doctor.FirstName </td>
+                <td>@doctor.FirstName</td>
 
                 @{string doctorId = doctor.DoctorId;}
-                <td> @Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" }) </td>
-                <td> @Html.ActionLink("Delete", "DeleteDoctor", new { doctorId }) </td>
-                </tr>
-            }
-        </table>
-    }
-    else
-    { <p>You have no doctors saved to My Doctors. Try <a href="/Home/Index/">searching</a> for a doctor</p>}
+                <td>@Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" })</td>
+                <td>@Html.ActionLink("Delete", "DeleteDoctor", new { doctorId })</td>
+            </tr>
+        }
+    </table>
+
 }
