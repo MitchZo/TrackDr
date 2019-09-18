@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,17 +33,22 @@ namespace TrackDr.Controllers
         // if the user does not exist in the database, they are redirected to a registration page after they register with ASP
         // if they are already registerd with the database, they will be redirected to the search/home page
         [AllowAnonymous]
-        public IActionResult Index()
+        public IActionResult Index(Doctor doctor)
         {
             // AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+            
             if (User.Identity.IsAuthenticated)
             {
                 AspNetUsers currentUser = _dbHelper.GetCurrentUser(User.Identity.Name);
                 if (_dbHelper.FindParentById(currentUser.Id) == null)
                 {
-                    return View("RegisterUser");
+                    
+                    return View("RegisterUser", doctor);
                 }
             }
+            // store temp data here?
+            //TempData["Doctor"] = doctor;
+            
             return View("Search");
         }
 
@@ -72,6 +77,12 @@ namespace TrackDr.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string userInput, string userState)
         {
+            if (TempData["Doctor"] != null)
+            {
+                string stringDoctor = TempData["Doctor"].ToString();
+                Doctor doctor = (Doctor) JsonConvert.DeserializeObject(stringDoctor);
+                _dbHelper.AddNewDoctor(doctor);
+            }
             Rootobject result;
             result = await _bDAPIHelper.GetDoctorList(userInput, userState);
             return View("ListDoctors", result);
@@ -86,11 +97,19 @@ namespace TrackDr.Controllers
 
         // this method adds a doctor to the database if they have not been added before
         // the doctor's UID as well as their first name is stored
-        public IActionResult AddDoctor(Doctor doctor) 
+
+        [AllowAnonymous]
+        public IActionResult AddDoctor(Doctor doctor)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["Doctor"] = JsonConvert.SerializeObject(doctor);
+                return RedirectToAction("SavedDoctors");
+
+            }
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             ParentDoctor newParentDoctor = new ParentDoctor();
-
+           
             if (ModelState.IsValid)
             {
                 Doctor newDoctor = new Doctor();
@@ -114,17 +133,17 @@ namespace TrackDr.Controllers
         }
 
         // this method adds a child
-        public IActionResult AddChild(string parentId)
-        {
-            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-            Child newChild = new Child();
+        //public IActionResult AddChild(string parentId)
+        //{
+        //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+        //    Child newChild = new Child();
 
-            newChild.ParentId = thisUser.Id;
+        //    newChild.ParentId = thisUser.Id;
 
-            _dbHelper.AddNewChild(newChild);
+        //    _dbHelper.AddNewChild(newChild);
 
-            return View("UserInformation");
-        }
+        //    return View("UserInformation");
+        //}
         //public IActionResult AddChildDoctor(string doctorUid)
         //{
         //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -147,15 +166,40 @@ namespace TrackDr.Controllers
         //    }
         //}
 
-            // this method returns a list of saved doctors by the user based on the user's ASP Id
+        // this method returns a list of saved doctors by the user based on the user's ASP Id
+
         public IActionResult SavedDoctors()
         {
+            if (TempData["Doctor"] != null)
+            {
+                string stringDoctor = TempData["Doctor"].ToString();
+                Doctor doctor = JsonConvert.DeserializeObject<Doctor>(stringDoctor);
+                if (_dbHelper.CanAddDoctor(doctor))
+                {
+                    _dbHelper.AddNewDoctor(doctor);
+                }
+                AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+                ParentDoctor newParentDoctor = new ParentDoctor();
+                if (newParentDoctor.ParentId == null)
+                {
+                    return RedirectToAction("RegisterUser");
+                }
+                newParentDoctor.ParentId = thisUser.Id;
+                newParentDoctor.DoctorId = doctor.DoctorId;
+                if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, doctor.DoctorId))
+                {
+                    _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+
+                }
+
+            }
             List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
 
             return View(doctorList);
         }
 
         // this method returns extra details on a doctor chosen by the user
+
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
@@ -163,6 +207,7 @@ namespace TrackDr.Controllers
         }
 
         // this method deletes a doctor based on the doctor's UID
+
         public IActionResult DeleteDoctor(string doctorId)
         {
             var userDelete = _dbHelper.GetCurrentUser(User.Identity.Name);
@@ -172,8 +217,12 @@ namespace TrackDr.Controllers
         }
         //saves the user's address to the UserDb as well as the user's Id number and their ASP Id
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
+            // ADD THE TEMP DATA SHTUFF HERE TOO -----------------------------------------------------------------------------------------------
+          
+
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             Parent newUser = new Parent();
 
@@ -187,9 +236,32 @@ namespace TrackDr.Controllers
             newUser.PhoneNumber = newUserInfo.PhoneNumber;
             newUser.Email = thisUser.Email;
 
-
             _dbHelper.AddNewParent(newUser);
+            if (TempData != null)
+            {
+                string stringDoctor = TempData["Doctor"].ToString();
+                Doctor doctor = JsonConvert.DeserializeObject<Doctor>(stringDoctor);
+                if (_dbHelper.CanAddDoctor(doctor))
+                {
+                    _dbHelper.AddNewDoctor(doctor);
+                }
 
+                ParentDoctor newParentDoctor = new ParentDoctor();
+                if (newParentDoctor.ParentId == null)
+                {
+                    RegisterUser();
+                }
+                newParentDoctor.ParentId = thisUser.Id;
+                newParentDoctor.DoctorId = doctor.DoctorId;
+                if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, doctor.DoctorId))
+                {
+                    _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+
+                }
+                List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
+
+                return View("SavedDoctors", doctorList);
+            }
             return View("Search");
         }
 
@@ -200,6 +272,7 @@ namespace TrackDr.Controllers
 
         // this method shows the user's information based on their ASP Id
         // if the user is not found, the user will be redirected to the search page
+
         public IActionResult UserInformation()
         {
             Parent foundParent = _dbHelper.FindParentById(_dbHelper.GetCurrentUser(User.Identity.Name).Id);
@@ -264,7 +337,7 @@ namespace TrackDr.Controllers
         }
         [AllowAnonymous]
         // this returns a list of doctors based on the user's insurance choice
-        public async Task<IActionResult> ListDoctorsBasedOnInsurance( string specialtyName)
+        public async Task<IActionResult> ListDoctorsBasedOnInsurance(string specialtyName)
         {
             string uid = _dbHelper.GetSpecialtyUID(specialtyName);
             Rootobject result;
