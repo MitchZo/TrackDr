@@ -83,6 +83,7 @@ input[type=submit]{
 }
 
 .insuranceButtons {
+    border-radius:30%;
     background-color: lawngreen;
     border: none;
     color: black;

@@ -97,24 +97,6 @@ namespace TrackDr.Helpers
             _context.Parent.Add(newUser);
             _context.SaveChanges();
         }
-        // this method adds a new child to the database 
-        public void AddNewChild(Child newChild)
-        {
-            _context.Child.Add(newChild);
-            _context.SaveChanges();
-        }
-
-        // this method will get a list of all the user's saved doctors
-        //public List<SingleDoctor> GetListOfCurrentUsersDoctors(string userName)
-        //{
-        //    List<SingleDoctor> doctorList = new List<SingleDoctor>();
-        //    var doctorIdList = GetSavedDoctors(userName);
-        //    foreach (string doctor in doctorIdList)
-        //    {
-        //            doctorList.Add(_bDAPIHelper.GetDoctor(doctor).Result);
-        //    }
-        //    return doctorList;
-        //}
 
         // this puts doctor's UIDs in a list based on the user's ID
         // ie.  puts the UID's of doctors affiliated with the user into a list
@@ -123,7 +105,6 @@ namespace TrackDr.Helpers
         {
             AspNetUsers thisUser = GetCurrentUser(userName);
             List<Doctor> doctorIdList = new List<Doctor>();
-
             var doctor = new Doctor();
             List<ParentDoctor> savedList = _context.ParentDoctor.Where(u => u.ParentId == thisUser.Id).ToList();
             foreach (ParentDoctor relationship in savedList)
@@ -132,7 +113,6 @@ namespace TrackDr.Helpers
                 {
                     doctor = GetDoctorFromDatabase(relationship.DoctorId);
                     doctorIdList.Add(doctor);
-                   
                 }
             }
             return doctorIdList;
@@ -181,10 +161,10 @@ namespace TrackDr.Helpers
                 {
                     if(relationship.ParentId == currentUser.Id)
                     {
-                    return relationship;
+                        return relationship;
                     }
                 }
-            }// TODO THIS IS THROWING AN EXCEPTION"System.ArgumentException: 'The key value at position 0 of the call to 'DbSet<ParentDoctor>.Find' was of type 'string', which does not match the property type of 'int'.'"
+            }
             return _context.ParentDoctor.Find(doctorId);
         }
 
@@ -202,7 +182,6 @@ namespace TrackDr.Helpers
                         insuranceBaseNameList.Add(insurance.InsuranceBaseName);
                     }
                 }
-
             }
             return insuranceBaseNameList;
         }
@@ -212,7 +191,7 @@ namespace TrackDr.Helpers
         {
             List<SavedInsurance> insuranceList = _context.SavedInsurance.ToList();
             List<string> specialtyNames = new List<string>();
-           foreach (var insurance in insuranceList)
+            foreach (var insurance in insuranceList)
             {
                 if (insurance.InsuranceBaseName == baseName)
                 {
@@ -234,7 +213,6 @@ namespace TrackDr.Helpers
                 }
             }
             return null;
-
         }
     }
 }

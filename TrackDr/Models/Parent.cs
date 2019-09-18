@@ -8,7 +8,6 @@ namespace TrackDr.Models
     {
         public Parent()
         {
-            Child = new HashSet<Child>();
             ParentDoctor = new HashSet<ParentDoctor>();
         }
 
@@ -20,8 +19,7 @@ namespace TrackDr.Models
             OR, PA, RI, SC, SD, TN, TX, UT, VT, VA, WA, WV,
             WI, WY
         }
-
-
+        
         public string ParentId { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
@@ -40,7 +38,6 @@ namespace TrackDr.Models
         public string ZipCode { get; set; }
         public string InsuranceBaseName { get; set; }
 
-        public virtual ICollection<Child> Child { get; set; }
         public virtual ICollection<ParentDoctor> ParentDoctor { get; set; }
     }
 }

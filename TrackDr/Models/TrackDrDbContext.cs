@@ -22,8 +22,6 @@ namespace TrackDr.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<Child> Child { get; set; }
-        public virtual DbSet<ChildDoctor> ChildDoctor { get; set; }
         public virtual DbSet<Doctor> Doctor { get; set; }
         public virtual DbSet<Parent> Parent { get; set; }
         public virtual DbSet<ParentDoctor> ParentDoctor { get; set; }
@@ -33,7 +31,6 @@ namespace TrackDr.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("DefaultConnection");
             }
         }
@@ -142,35 +139,6 @@ namespace TrackDr.Models
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
-            modelBuilder.Entity<Child>(entity =>
-            {
-                entity.Property(e => e.FirstName).HasMaxLength(64);
-
-                entity.Property(e => e.ParentId).HasMaxLength(450);
-
-                entity.HasOne(d => d.Parent)
-                    .WithMany(p => p.Child)
-                    .HasForeignKey(d => d.ParentId)
-                    .HasConstraintName("FK__Child__ParentId__4D94879B");
-            });
-
-            modelBuilder.Entity<ChildDoctor>(entity =>
-            {
-                entity.Property(e => e.ChildDoctorId).ValueGeneratedNever();
-
-                entity.Property(e => e.DoctorId).HasMaxLength(450);
-
-                entity.HasOne(d => d.Child)
-                    .WithMany(p => p.ChildDoctor)
-                    .HasForeignKey(d => d.ChildId)
-                    .HasConstraintName("FK__ChildDoct__Child__5165187F");
-
-                entity.HasOne(d => d.Doctor)
-                    .WithMany(p => p.ChildDoctor)
-                    .HasForeignKey(d => d.DoctorId)
-                    .HasConstraintName("FK__ChildDoct__Docto__5070F446");
             });
 
             modelBuilder.Entity<Doctor>(entity =>

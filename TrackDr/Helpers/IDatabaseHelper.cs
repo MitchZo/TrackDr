@@ -15,7 +15,6 @@ namespace TrackDr.Helpers
         void AddNewParentDoctorRelationship(ParentDoctor newParentDoctor);
         List<Doctor> GetListOfCurrentUsersDoctors(string userName);
         void AddNewParent(Parent newUser);
-        void AddNewChild(Child newChild);
         Parent FindParentById(string userId);
         void UpdateParent(Parent updatedUser);
         Parent GetCurrentParent(AspNetUsers currentUser);
@@ -23,7 +22,6 @@ namespace TrackDr.Helpers
         ParentDoctor FindParentDoctorRelationship(string doctorId, AspNetUsers currentUser);
         List<string> GetAllBaseInsuranceNames();
         List<string> GetAllSpecialtyInsuranceNames(string baseInsuranceName);
-
         string GetSpecialtyUID(string specialtyName);
     }
 }
