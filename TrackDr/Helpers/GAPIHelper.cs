@@ -31,14 +31,14 @@ namespace TrackDr.Helpers
             AspNetUsers currentUser = _dbHelper.GetCurrentUser(userName);
             Parent currentParent = _dbHelper.GetCurrentParent(currentUser);
 
-            returnString += GooglefyString(currentParent.HouseNumber + "+");
-            returnString += GooglefyString(currentParent.Street + "+");
+            returnString += GooglefyString(currentParent.HouseNumber);
+            returnString += GooglefyString(currentParent.Street);
 
-            if(currentParent.Street2 != null)
-            { returnString += GooglefyString(currentParent.Street2) + "+"; }
+            if (currentParent.Street2 != null)
+            { returnString += GooglefyString(currentParent.Street2); }
 
-            returnString += GooglefyString(currentParent.City) + "+";
-            returnString += GooglefyString(currentParent.State);
+            returnString += GooglefyString(currentParent.City);
+            returnString += (currentParent.State);
 
             return returnString;
         }
@@ -50,13 +50,20 @@ namespace TrackDr.Helpers
             {
                 foreach (string word in words)
                 {
-                    returnString += word;
+                    returnString += word + "+";
                 }
             }
             else
             {
-                return toBeGooglefied;
+                return toBeGooglefied + "+";
             }
+            return returnString;
+        }
+        public string GooglefyDoctorAddress(SingleDoctor doctor)
+        {
+            string returnString = "";
+            returnString += GooglefyString(doctor.data.practices[0].visit_address.street);
+            returnString += (doctor.data.practices[0].visit_address.state);
             return returnString;
         }
         public async Task<string> GetTravelInfo(string startAddress, string endAddress)
@@ -64,7 +71,7 @@ namespace TrackDr.Helpers
             string apiKey = GetAPIKey();
             var client = new HttpClient();
             client.BaseAddress = new Uri("https://maps.googleapis.com");
-            var response = await client.GetAsync($"maps/api/distancematrix/json?units=imperial&origins={startAddress}&destinations={endAddress}&key={GetAPIKey()}"); 
+            var response = await client.GetAsync($"maps/api/distancematrix/json?units=imperial&origins={startAddress}&destinations={endAddress}&key={GetAPIKey()}");
             return await response.Content.ReadAsStringAsync();
         }
         public List<Row> GetTravelRoutes(string startAddress, string endAddress)
@@ -79,29 +86,40 @@ namespace TrackDr.Helpers
         }
         public string GetDistanceInMiles(List<Row> travelRoutes)
         {
-            string distance = "no locations in range";
-            List<Element[]> elements = new List<Element[]>();
-            foreach(Row row in travelRoutes)
-            {
-                elements.Add(row.elements);
-            }
-            foreach(Element[] elementArray in elements)
-            {
-                distance = elementArray[0].distance.text;
-            }
-            return distance;
-        }
-        public string GetDistanceInTime(List<Row> travelRoutes)
-        {
-            string distance = "no locations in range";
+            string distance = "Unable to calculate distance. Please check your profile address.";
             List<Element[]> elements = new List<Element[]>();
             foreach (Row row in travelRoutes)
             {
                 elements.Add(row.elements);
             }
-            foreach (Element[] elementArray in elements)
             {
-                distance = elementArray[0].duration.text;
+                foreach (Element[] elementArray in elements)
+                {
+                    if (elementArray[0].distance != null)
+                    {
+                        distance = elementArray[0].distance.text;
+                    }
+                }
+            }
+            return distance;
+        }
+        public string GetDistanceInTime(List<Row> travelRoutes)
+        {
+            string distance = "Unable to calculate time. Please check your profile address.";
+            List<Element[]> elements = new List<Element[]>();
+            foreach (Row row in travelRoutes)
+            {
+                elements.Add(row.elements);
+            }
+            if (elements.Count > 0)
+            {
+                foreach (Element[] elementArray in elements)
+                {
+                    if (elementArray[0].duration != null)
+                    {
+                        distance = elementArray[0].duration.text;
+                    }
+                }
             }
             return distance;
         }

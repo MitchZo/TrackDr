@@ -170,8 +170,10 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
-            doctor.DistanceInMiles = _gAPIHelper.GetDistanceInMiles(_gAPIHelper.GetTravelRoutes());
-            doctor.DistanceInTime = _gAPIHelper.GetDistanceInTime();
+            string startAddress = _gAPIHelper.GooglefyUserAddress(User.Identity.Name);
+            string endAddress = _gAPIHelper.GooglefyDoctorAddress(doctor);
+            doctor.DistanceInMiles = _gAPIHelper.GetDistanceInMiles(_gAPIHelper.GetTravelRoutes(startAddress,endAddress));
+            doctor.DistanceInTime = _gAPIHelper.GetDistanceInTime(_gAPIHelper.GetTravelRoutes(startAddress, endAddress));
             return View(doctor);
         }
 

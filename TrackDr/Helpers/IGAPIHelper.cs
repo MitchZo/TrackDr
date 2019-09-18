@@ -14,5 +14,6 @@ namespace TrackDr.Helpers
         List<Models.Row> GetTravelRoutes(string startAddress, string endAddress);
         string GetDistanceInMiles(List<Models.Row> travelRoutes);
         string GetDistanceInTime(List<Models.Row> travelRoutes);
+        string GooglefyDoctorAddress(Models.SingleDoctor doctor);
     }
 }
