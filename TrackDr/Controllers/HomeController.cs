@@ -125,6 +125,8 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
+            doctor.DistanceInMiles = _gAPIHelper.GetDistanceInMiles(_gAPIHelper.GetTravelRoutes());
+            doctor.DistanceInTime = _gAPIHelper.GetDistanceInTime();
             return View(doctor);
         }
 

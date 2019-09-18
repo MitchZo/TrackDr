@@ -36,10 +36,10 @@
             <td>
                 @if (doctor.specialties.Length > 1)
                 {
-                    <ul>
+                    <ul style="padding-left:0">
                         @foreach (var specialty in doctor.specialties)
                         {
-                            <li>@specialty.name</li>
+                            <li style="list-style-position:inside">@specialty.name</li>
                         }
                     </ul>
                 }

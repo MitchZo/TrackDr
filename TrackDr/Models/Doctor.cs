@@ -30,7 +30,8 @@ namespace TrackDr.Models
     {
         public Meta meta { get; set; }
         public Datum data { get; set; }
-        
+        public string DistanceInMiles { get; set; }
+        public string DistanceInTime { get; set; }
     }
 
     public class Meta
