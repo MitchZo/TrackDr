@@ -82,7 +82,6 @@ namespace TrackDr.Helpers
         {
             _context.Doctor.Add(newDoctor);
             _context.SaveChanges();
-            // TODO make this workkk!! throwing a null exception when the user tries to add a doctor
         }
 
         // this method adds a new parent doctor relationship if it hasnt been added yet

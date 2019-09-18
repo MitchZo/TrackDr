@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "ListDoctorsBasedOnInsurance";
+    ViewData["Title"] = "List Doctors Based On Insurance";
 }
 
 <h1>List Of Doctors Based On Insurance:</h1>
@@ -27,7 +27,7 @@
                     {
                         if (!stateList.Contains(office.visit_address.state))
                         {
-                            <p>@office.visit_address.state</p>
+                            <p>@office.visit_address.state</p><br/>
                             stateList.Add(office.visit_address.state);
                         }
                     }
@@ -36,10 +36,6 @@
             <td>
                 @foreach (var specialty in doctor.specialties)
                 {
-                    if (specialty == null)
-                    {
-                        System.Threading.Thread.Sleep(300);
-                    }
                     <p>@specialty.name</p>
                 }
             </td>

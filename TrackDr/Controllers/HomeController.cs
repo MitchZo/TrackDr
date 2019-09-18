@@ -65,11 +65,11 @@ namespace TrackDr.Controllers
             return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult Search()
-        {
-            return View();
-        }
+        //[AllowAnonymous]
+        //public IActionResult Search()
+        //{
+        //    return View();
+        //}
 
         // this method sends the user's input to the API search method 
         // and returns a list of doctors that corrlate with the information the user entered
@@ -84,21 +84,22 @@ namespace TrackDr.Controllers
                 _dbHelper.AddNewDoctor(doctor);
             }
             Rootobject result;
-            result = await _bDAPIHelper.GetDoctorList(userInput, userState);
+            if (userInput == null && userState == null)
+            {
+                result = await _bDAPIHelper.GetDoctorList();
+            }
+            else
+            {
+                result = await _bDAPIHelper.GetDoctorList(userInput, userState);
+            }
             return View("ListDoctors", result);
-        }
-
-
-        // TODO DELETE THIS TEST METHOD
-        public void Test()
-        {
-            _gAPIHelper.GetTravelInfo("Vancouver+BC", "San+Francisco");
         }
 
         // this method adds a doctor to the database if they have not been added before
         // the doctor's UID as well as their first name is stored
 
         [AllowAnonymous]
+
         public IActionResult AddDoctor(Doctor doctor)
         {
             if (!User.Identity.IsAuthenticated)
@@ -131,40 +132,6 @@ namespace TrackDr.Controllers
             }
             return View("Search");
         }
-
-        // this method adds a child
-        //public IActionResult AddChild(string parentId)
-        //{
-        //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-        //    Child newChild = new Child();
-
-        //    newChild.ParentId = thisUser.Id;
-
-        //    _dbHelper.AddNewChild(newChild);
-
-        //    return View("UserInformation");
-        //}
-        //public IActionResult AddChildDoctor(string doctorUid)
-        //{
-        //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-        //    Parent childParent = _dbHelper.GetCurrentParent(thisUser);
-
-        //    ChildDoctor newChildDoctor = new ChildDoctor();
-        //    if (ModelState.IsValid)
-        //    {
-        //        Doctor newDoctor = new Doctor();
-        //        newDoctor.DoctorId = doctorUid;
-        //        if (_dbHelper.CanAddDoctor(newDoctor))
-        //        {
-        //            _dbHelper.AddNewDoctor(newDoctor);
-        //        }
-
-        //        newChildDoctor.ChildId = thisUser.Id;
-        //        newChildDoctor.DoctorId = doctorUid;
-
-
-        //    }
-        //}
 
         // this method returns a list of saved doctors by the user based on the user's ASP Id
 
@@ -203,6 +170,8 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> DoctorDetails(string doctorId)
         {
             SingleDoctor doctor = await _bDAPIHelper.GetDoctor(doctorId);
+            doctor.DistanceInMiles = _gAPIHelper.GetDistanceInMiles(_gAPIHelper.GetTravelRoutes());
+            doctor.DistanceInTime = _gAPIHelper.GetDistanceInTime();
             return View(doctor);
         }
 
@@ -220,9 +189,6 @@ namespace TrackDr.Controllers
         [AllowAnonymous]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
-            // ADD THE TEMP DATA SHTUFF HERE TOO -----------------------------------------------------------------------------------------------
-          
-
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             Parent newUser = new Parent();
 
