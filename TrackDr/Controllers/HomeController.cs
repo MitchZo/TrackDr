@@ -191,46 +191,51 @@ namespace TrackDr.Controllers
         [AllowAnonymous]
         public IActionResult RegisterUser(Parent newUserInfo)
         {
-            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-            Parent newUser = new Parent();
-
-            newUser.HouseNumber = newUserInfo.HouseNumber;
-            newUser.Street = newUserInfo.Street;
-            newUser.Street2 = newUserInfo.Street2;
-            newUser.City = newUserInfo.City;
-            newUser.State = newUserInfo.State;
-            newUser.ZipCode = newUserInfo.ZipCode;
-            newUser.ParentId = thisUser.Id;
-            newUser.PhoneNumber = newUserInfo.PhoneNumber;
-            newUser.Email = thisUser.Email;
-
-            _dbHelper.AddNewParent(newUser);
-            if (TempData != null)
+            if (ModelState.IsValid)
             {
-                string stringDoctor = TempData["Doctor"].ToString();
-                Doctor doctor = JsonConvert.DeserializeObject<Doctor>(stringDoctor);
-                if (_dbHelper.CanAddDoctor(doctor))
-                {
-                    _dbHelper.AddNewDoctor(doctor);
-                }
+                AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
+                Parent newUser = new Parent();
 
-                ParentDoctor newParentDoctor = new ParentDoctor();
-                if (newParentDoctor.ParentId == null)
-                {
-                    RegisterUser();
-                }
-                newParentDoctor.ParentId = thisUser.Id;
-                newParentDoctor.DoctorId = doctor.DoctorId;
-                if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, doctor.DoctorId))
-                {
-                    _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+                newUser.HouseNumber = newUserInfo.HouseNumber;
+                newUser.Street = newUserInfo.Street;
+                newUser.Street2 = newUserInfo.Street2;
+                newUser.City = newUserInfo.City;
+                newUser.State = newUserInfo.State;
+                newUser.ZipCode = newUserInfo.ZipCode;
+                newUser.ParentId = thisUser.Id;
+                newUser.PhoneNumber = newUserInfo.PhoneNumber;
+                newUser.Email = thisUser.Email;
 
-                }
-                List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
+                _dbHelper.AddNewParent(newUser);
+                if (TempData != null)
+                {
+                    string stringDoctor = TempData["Doctor"].ToString();
+                    Doctor doctor = JsonConvert.DeserializeObject<Doctor>(stringDoctor);
+                    if (_dbHelper.CanAddDoctor(doctor))
+                    {
+                        _dbHelper.AddNewDoctor(doctor);
+                    }
 
-                return View("SavedDoctors", doctorList);
+                    ParentDoctor newParentDoctor = new ParentDoctor();
+                    if (newParentDoctor.ParentId == null)
+                    {
+                        RegisterUser();
+                    }
+                    newParentDoctor.ParentId = thisUser.Id;
+                    newParentDoctor.DoctorId = doctor.DoctorId;
+                    if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, doctor.DoctorId))
+                    {
+                        _dbHelper.AddNewParentDoctorRelationship(newParentDoctor);
+
+                    }
+                    List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
+
+                    return View("SavedDoctors", doctorList);
+                }
+                return View("Search");
             }
-            return View("Search");
+            else
+                return View(newUserInfo);
         }
 
         public IActionResult RegisterUser()
@@ -257,23 +262,25 @@ namespace TrackDr.Controllers
         public IActionResult EditUserInformation(Parent user)
         {
             // AspNetUsers thisUser = _context.AspNetUsers.Where(u => u.UserName == User.Identity.Name).First();
+            if (ModelState.IsValid)
+            {
+            
+                Parent updatedUser = new Parent();
+                updatedUser.HouseNumber = user.HouseNumber;
+                updatedUser.Street = user.Street;
+                updatedUser.Street2 = user.Street2;
+                updatedUser.City = user.City;
+                updatedUser.State = user.State;
+                updatedUser.ZipCode = user.ZipCode;
+                updatedUser.ParentId = user.ParentId;
+                updatedUser.Email = user.Email;
+                updatedUser.PhoneNumber = user.PhoneNumber;
+                updatedUser.ParentId = user.ParentId;
 
-            Parent updatedUser = new Parent();
-            updatedUser.HouseNumber = user.HouseNumber;
-            updatedUser.Street = user.Street;
-            updatedUser.Street2 = user.Street2;
-            updatedUser.City = user.City;
-            updatedUser.State = user.State;
-            updatedUser.ZipCode = user.ZipCode;
-            updatedUser.ParentId = user.ParentId;
-            updatedUser.Email = user.Email;
-            updatedUser.PhoneNumber = user.PhoneNumber;
-            updatedUser.ParentId = user.ParentId;
-
-            _dbHelper.UpdateParent(updatedUser);
-
-
-            return View("UserInformation", updatedUser);
+                _dbHelper.UpdateParent(updatedUser);
+                return View("UserInformation", updatedUser);
+            }
+                return View("EditUserInformation", user);
         }
 
         // this method redirects the user to the edit user information page if that user exists in the database
@@ -284,10 +291,8 @@ namespace TrackDr.Controllers
             if (found != null)
             {
                 return View("EditUserInformation", found);
-
             }
-
-            return View("Search");
+                return View("Search");
         }
         [AllowAnonymous]
         // this returns a list of unique insurance base names
