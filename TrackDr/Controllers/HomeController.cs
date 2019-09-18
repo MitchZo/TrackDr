@@ -147,7 +147,7 @@ namespace TrackDr.Controllers
                 }
                 AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
                 ParentDoctor newParentDoctor = new ParentDoctor();
-                if (newParentDoctor.ParentId == null)
+                if (_dbHelper.FindParentById(thisUser.Id) == null)
                 {
                     return RedirectToAction("RegisterUser");
                 }
@@ -215,10 +215,10 @@ namespace TrackDr.Controllers
                 }
 
                 ParentDoctor newParentDoctor = new ParentDoctor();
-                if (newParentDoctor.ParentId == null)
-                {
-                    RegisterUser();
-                }
+                //if (newParentDoctor.ParentId == null)
+                //{
+                //    RegisterUser();
+                //}
                 newParentDoctor.ParentId = thisUser.Id;
                 newParentDoctor.DoctorId = doctor.DoctorId;
                 if (_dbHelper.CanAddParentDoctorRelationship(thisUser.Id, doctor.DoctorId))
