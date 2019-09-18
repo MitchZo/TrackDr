@@ -55,10 +55,10 @@ body {
     background-position: center;
 }
 .footer {
+  background-color:lawngreen;
   position: absolute;
   bottom: 0;
   width: 100%;
-  white-space: nowrap;
   /* Set the fixed height of the footer here */
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
@@ -83,6 +83,7 @@ input[type=submit]{
 }
 
 .insuranceButtons {
+    border-radius:12px;
     background-color: lawngreen;
     border: none;
     color: black;

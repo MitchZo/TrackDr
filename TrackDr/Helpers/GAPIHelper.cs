@@ -92,13 +92,12 @@ namespace TrackDr.Helpers
             {
                 elements.Add(row.elements);
             }
+
+            foreach (Element[] elementArray in elements)
             {
-                foreach (Element[] elementArray in elements)
+                if (elementArray[0].distance != null)
                 {
-                    if (elementArray[0].distance != null)
-                    {
-                        distance = elementArray[0].distance.text;
-                    }
+                    distance = elementArray[0].distance.text;
                 }
             }
             return distance;

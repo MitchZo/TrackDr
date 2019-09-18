@@ -1,12 +1,12 @@
 ﻿
 @{
-    ViewData["Title"] = "DoctorDetails";
+    ViewData["Title"] = "Doctor Details";
 }
 
 @model TrackDr.Models.SingleDoctor
 <h1>Doctor Details</h1>
 
-<table class="table table-hover">
+<table class="table table-hover" style="opacity:0.6;background-color:white">
     <tr>
         <th>Distance in Miles:</th>
         <th>Distance in Time:</th>
@@ -53,6 +53,6 @@
             }
         </td>
 
-        <td><img src="@Model.data.profile.image_url" alt="Photo" /> </td>
+        <td><img src="@Model.data.profile.image_url" alt="Photo" /></td>
     </tr>
 </table>
