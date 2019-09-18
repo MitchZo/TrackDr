@@ -6,21 +6,27 @@
 
 <h1>Saved Doctors</h1>
 
-<table class="table">
-    <tr>
-        <th>Title:</th>
-        <th>Name:</th>
-        @*<th>Specialty:</th>*@
-    </tr>
-
-    @foreach (var doctor in Model)
+@{ if (Model.Count() > 0)
     {
-        <tr>
-            <td>@doctor.FirstName</td>
+        <table class="table">
+            <tr>
+                <th>Name:</th>
+                <th>Details:</th>
+                <th>Remove:</th>
+            </tr>
 
-            @{string doctorId = doctor.DoctorId;}
-            <td>@Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" })</td>
-            <td>@Html.ActionLink("Delete", "DeleteDoctor", new { doctorId })</td>
-        </tr>
+            @foreach (var doctor in Model)
+            {
+                <tr>
+                <td> @doctor.FirstName </td>
+
+                @{string doctorId = doctor.DoctorId;}
+                <td> @Html.ActionLink("More Details", "DoctorDetails", "Home", new { doctorId }, htmlAttributes: new { target = "_blank" }) </td>
+                <td> @Html.ActionLink("Delete", "DeleteDoctor", new { doctorId }) </td>
+                </tr>
+            }
+        </table>
     }
-</table>
+    else
+    { <p>You have no doctors saved to My Doctors. Try <a href="/Home/Index/">searching</a> for a doctor</p>}
+}

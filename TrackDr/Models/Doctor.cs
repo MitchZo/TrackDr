@@ -30,6 +30,7 @@ namespace TrackDr.Models
     {
         public Meta meta { get; set; }
         public Datum data { get; set; }
+        
     }
 
     public class Meta
