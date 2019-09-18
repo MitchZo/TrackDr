@@ -136,7 +136,7 @@ namespace TrackDr.Controllers
                 }
                 AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
                 ParentDoctor newParentDoctor = new ParentDoctor();
-                if (newParentDoctor.ParentId == null)
+                if (_dbHelper.FindParentById(thisUser.Id) == null)
                 {
                     return RedirectToAction("RegisterUser");
                 }
@@ -193,6 +193,7 @@ namespace TrackDr.Controllers
 
                 _dbHelper.AddNewParent(newUser);
                 if (TempData.Count() != 0)
+
                 {
                     string stringDoctor = TempData["Doctor"].ToString();
                     Doctor doctor = JsonConvert.DeserializeObject<Doctor>(stringDoctor);
