@@ -21,23 +21,35 @@
             <td>@doctor.profile.title</td>
             <td>@doctor.profile.first_name @doctor.profile.last_name</td>
             <td>
-            @{List<string> stateList = new List<string>();
-                @foreach (var office in doctor.practices)
-                {
-                    if (!stateList.Contains(office.visit_address.state))
+                @{List<string> stateList = new List<string>();
+                    @foreach (var office in doctor.practices)
                     {
+                        if (!stateList.Contains(office.visit_address.state))
+                        {
 
-                        @office.visit_address.state<br />
-                        stateList.Add(office.visit_address.state);
+                            @office.visit_address.state<br />
+                            stateList.Add(office.visit_address.state);
+                        }
                     }
                 }
-            }
-            @*@foreach (var specialty in doctor.specialties)
+                @*@foreach (var specialty in doctor.specialties)
+                    {
+                        <td>@specialty.name</td>
+                    }*@
+            </td>
+            <td>
+                @if(doctor.specialties.Length > 1)
                 {
-                    <td>@specialty.name</td>
-                }*@
-                </td>
-            <td>@doctor.specialties[0].name</td>
+                <ul>
+                    @foreach (var specialty in doctor.specialties)
+                    {
+                    <li>@specialty.name</li>
+                    }
+                </ul>
+                }
+                else
+                {@doctor.specialties[0].name}
+            </td>
 
             <td>
                 <form action="/Home/AddDoctor" method="post">
