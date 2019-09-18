@@ -14,7 +14,7 @@
         <div class="fields">
             <input type="text" name="userInput" placeholder="Specialty (Optional)" />
             <br />
-            <input type="text" name="userInsurance" placeholder="Insurance Carrier (Optional)" />
+            
             <div class="select" style="width: 182px;">
                 @Html.DropDownListFor(m => m.UserState, new SelectList(Enum.GetValues(typeof(Parent.StateAbbreviations))), "State (Optional)", new { @class = "form-control" })
             </div>
