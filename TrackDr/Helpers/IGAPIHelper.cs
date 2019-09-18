@@ -11,5 +11,8 @@ namespace TrackDr.Helpers
         string GooglefyUserAddress(string userName);
         string GooglefyString(string toBeGooglefied);
         Task<string> GetTravelInfo(string startAddress, string endAddress);
+        List<Models.Row> GetTravelRoutes(string startAddress, string endAddress);
+        string GetDistanceInMiles(List<Models.Row> travelRoutes);
+        string GetDistanceInTime(List<Models.Row> travelRoutes);
     }
 }

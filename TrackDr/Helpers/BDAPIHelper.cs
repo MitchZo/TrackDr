@@ -45,6 +45,16 @@ namespace TrackDr.Helpers
             return await response.Content.ReadAsAsync<Rootobject>();
         }
 
+        //this method returns a list of doctors based on what the user nothing in the search field
+        public async Task<Rootobject> GetDoctorList()
+        {
+            string apiKey = GetAPIKey();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://api.betterdoctor.com");
+            var response = await client.GetAsync($"/2016-03-01/doctors?query=specialty_uid=pediatrician&limit=100&user_key={apiKey}");
+            return await response.Content.ReadAsAsync<Rootobject>();
+        }
+
         // this method returns doctors based on which base and specialty insurace the user chooses
         public async Task<Rootobject> GetDoctorsBaseOnInsurance(string userInsurance) 
         {
