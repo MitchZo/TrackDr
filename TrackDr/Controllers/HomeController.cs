@@ -77,13 +77,6 @@ namespace TrackDr.Controllers
             return View("ListDoctors", result);
         }
 
-
-        // TODO DELETE THIS TEST METHOD
-        public void Test()
-        {
-            _gAPIHelper.GetTravelInfo("Vancouver+BC", "San+Francisco");
-        }
-
         // this method adds a doctor to the database if they have not been added before
         // the doctor's UID as well as their first name is stored
         public IActionResult AddDoctor(Doctor doctor) 

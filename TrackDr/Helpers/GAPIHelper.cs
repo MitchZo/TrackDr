@@ -91,6 +91,19 @@ namespace TrackDr.Helpers
             }
             return distance;
         }
-
+        public string GetDistanceInTime(List<Row> travelRoutes)
+        {
+            string distance = "no locations in range";
+            List<Element[]> elements = new List<Element[]>();
+            foreach (Row row in travelRoutes)
+            {
+                elements.Add(row.elements);
+            }
+            foreach (Element[] elementArray in elements)
+            {
+                distance = elementArray[0].duration.text;
+            }
+            return distance;
+        }
     }
 }
