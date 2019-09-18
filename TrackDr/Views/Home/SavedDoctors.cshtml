@@ -11,12 +11,12 @@
 @if (Model.Count() == 0 )
 {
     <h5>You don't currently have any doctors saved!</h5>
-    <h5>Add a doctor to your list @Html.ActionLink("here", "Search")</h5>
+    <h5>Add a doctor to your list @Html.ActionLink("here", "Index")</h5>
 }
 
 @if (Model.Count() != 0)
 {
-    <table class="table" style="opacity:0.6;background-color:white">
+    <table class="table-hover" style="opacity:0.6;background-color:white">
         <tr>
             <th>Name:</th>
             <th>More Details:</th>
