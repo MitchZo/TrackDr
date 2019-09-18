@@ -32,20 +32,16 @@
                         }
                     }
                 }
-                @*@foreach (var specialty in doctor.specialties)
-                    {
-                        <td>@specialty.name</td>
-                    }*@
             </td>
             <td>
-                @if(doctor.specialties.Length > 1)
+                @if (doctor.specialties.Length > 1)
                 {
-                <ul>
-                    @foreach (var specialty in doctor.specialties)
-                    {
-                    <li>@specialty.name</li>
-                    }
-                </ul>
+                    <ul>
+                        @foreach (var specialty in doctor.specialties)
+                        {
+                            <li>@specialty.name</li>
+                        }
+                    </ul>
                 }
                 else
                 {@doctor.specialties[0].name}

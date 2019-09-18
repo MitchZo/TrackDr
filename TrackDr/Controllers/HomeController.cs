@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -60,11 +60,11 @@ namespace TrackDr.Controllers
             return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult Search()
-        {
-            return View();
-        }
+        //[AllowAnonymous]
+        //public IActionResult Search()
+        //{
+        //    return View();
+        //}
 
         // this method sends the user's input to the API search method 
         // and returns a list of doctors that corrlate with the information the user entered
@@ -73,13 +73,20 @@ namespace TrackDr.Controllers
         public async Task<IActionResult> Search(string userInput, string userState)
         {
             Rootobject result;
-            result = await _bDAPIHelper.GetDoctorList(userInput, userState);
+            if (userInput == null && userState == null)
+            {
+                result = await _bDAPIHelper.GetDoctorList();
+            }
+            else
+            {
+                result = await _bDAPIHelper.GetDoctorList(userInput, userState);
+            }
             return View("ListDoctors", result);
         }
 
         // this method adds a doctor to the database if they have not been added before
         // the doctor's UID as well as their first name is stored
-        public IActionResult AddDoctor(Doctor doctor) 
+        public IActionResult AddDoctor(Doctor doctor)
         {
             AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
             ParentDoctor newParentDoctor = new ParentDoctor();
@@ -106,41 +113,7 @@ namespace TrackDr.Controllers
             return View("Search");
         }
 
-        // this method adds a child
-        public IActionResult AddChild(string parentId)
-        {
-            AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-            Child newChild = new Child();
-
-            newChild.ParentId = thisUser.Id;
-
-            _dbHelper.AddNewChild(newChild);
-
-            return View("UserInformation");
-        }
-        //public IActionResult AddChildDoctor(string doctorUid)
-        //{
-        //    AspNetUsers thisUser = _dbHelper.GetCurrentUser(User.Identity.Name);
-        //    Parent childParent = _dbHelper.GetCurrentParent(thisUser);
-
-        //    ChildDoctor newChildDoctor = new ChildDoctor();
-        //    if (ModelState.IsValid)
-        //    {
-        //        Doctor newDoctor = new Doctor();
-        //        newDoctor.DoctorId = doctorUid;
-        //        if (_dbHelper.CanAddDoctor(newDoctor))
-        //        {
-        //            _dbHelper.AddNewDoctor(newDoctor);
-        //        }
-
-        //        newChildDoctor.ChildId = thisUser.Id;
-        //        newChildDoctor.DoctorId = doctorUid;
-
-
-        //    }
-        //}
-
-            // this method returns a list of saved doctors by the user based on the user's ASP Id
+        // this method returns a list of saved doctors by the user based on the user's ASP Id
         public IActionResult SavedDoctors()
         {
             List<Doctor> doctorList = _dbHelper.GetListOfCurrentUsersDoctors(User.Identity.Name);
@@ -257,7 +230,7 @@ namespace TrackDr.Controllers
         }
         [AllowAnonymous]
         // this returns a list of doctors based on the user's insurance choice
-        public async Task<IActionResult> ListDoctorsBasedOnInsurance( string specialtyName)
+        public async Task<IActionResult> ListDoctorsBasedOnInsurance(string specialtyName)
         {
             string uid = _dbHelper.GetSpecialtyUID(specialtyName);
             Rootobject result;
